@@ -7,7 +7,8 @@ import { Label } from './components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge } from './components/ui/badge';
 import { Alert, AlertDescription } from './components/ui/alert';
-import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
+import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 function App() {
   // Données historiques complètes (Janvier à Mai 2025)
@@ -20,7 +21,14 @@ function App() {
       premieres_consultations: 42,
       taux_transformation_enfants: 75,
       rdv_manques: 120,
-      rdv_presents: 850
+      rdv_presents: 850,
+      taux_transformation_cse: 22.0,
+      nombre_cse: 18,
+      nombre_diagnostics_enfants: 20,
+      jours_dr_vergez: 12,
+      jours_collaborateur: 18,
+      nombre_devis_acceptes: 28,
+      total_devis_acceptes: 140000
     },
     {
       mois: 'février', 
@@ -30,7 +38,14 @@ function App() {
       premieres_consultations: 45,
       taux_transformation_enfants: 72,
       rdv_manques: 115,
-      rdv_presents: 880
+      rdv_presents: 880,
+      taux_transformation_cse: 23.0,
+      nombre_cse: 22,
+      nombre_diagnostics_enfants: 22,
+      jours_dr_vergez: 11,
+      jours_collaborateur: 17,
+      nombre_devis_acceptes: 31,
+      total_devis_acceptes: 155000
     },
     {
       mois: 'mars',
@@ -40,7 +55,14 @@ function App() {
       premieres_consultations: 39,
       taux_transformation_enfants: 76,
       rdv_manques: 125,
-      rdv_presents: 820
+      rdv_presents: 820,
+      taux_transformation_cse: 12.5,
+      nombre_cse: 16,
+      nombre_diagnostics_enfants: 18,
+      jours_dr_vergez: 14,
+      jours_collaborateur: 20,
+      nombre_devis_acceptes: 26,
+      total_devis_acceptes: 130000
     },
     {
       mois: 'avril',
@@ -50,7 +72,14 @@ function App() {
       premieres_consultations: 41,
       taux_transformation_enfants: 78,
       rdv_manques: 118,
-      rdv_presents: 895
+      rdv_presents: 895,
+      taux_transformation_cse: 16.0,
+      nombre_cse: 19,
+      nombre_diagnostics_enfants: 21,
+      jours_dr_vergez: 12,
+      jours_collaborateur: 19,
+      nombre_devis_acceptes: 29,
+      total_devis_acceptes: 145000
     },
     {
       mois: 'mai',
@@ -60,10 +89,20 @@ function App() {
       premieres_consultations: 37,
       taux_transformation_enfants: 79,
       rdv_manques: 131,
-      rdv_presents: 900
+      rdv_presents: 900,
+      taux_transformation_cse: 15.0,
+      nombre_cse: 20,
+      nombre_diagnostics_enfants: 19,
+      jours_dr_vergez: 13,
+      jours_collaborateur: 19,
+      nombre_devis_acceptes: 23,
+      total_devis_acceptes: 120000
     }
   ];
 
+  const [selectedMonth, setSelectedMonth] = useState('mai');
+  const [selectedYear, setSelectedYear] = useState(2025);
+  
   const [currentData, setCurrentData] = useState({
     mois: 'mai',
     annee: 2025,
@@ -125,11 +164,82 @@ function App() {
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
+  const moisOptions = [
+    'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+  ];
+
+  const anneeOptions = [2023, 2024, 2025, 2026];
+
   useEffect(() => {
     chargerTableaux();
     chargerRecommandations();
     chargerRectifications();
   }, []);
+
+  useEffect(() => {
+    // Charger les données du mois sélectionné
+    loadSelectedMonthData();
+  }, [selectedMonth, selectedYear]);
+
+  const loadSelectedMonthData = () => {
+    // Chercher dans les données historiques
+    const donneesMois = donneesHistoriques.find(
+      d => d.mois === selectedMonth && d.annee === selectedYear
+    );
+
+    if (donneesMois) {
+      setCurrentData({
+        mois: donneesMois.mois,
+        annee: donneesMois.annee,
+        metriques_activite: {
+          debuts_traitement: donneesMois.debuts_traitement,
+          premieres_consultations: donneesMois.premieres_consultations,
+          deposes: 22, // Valeur par défaut
+          recettes_mois: donneesMois.recettes_mois,
+          rdv_manques: donneesMois.rdv_manques,
+          rdv_presents: donneesMois.rdv_presents
+        },
+        ressources_humaines: {
+          jours_collaborateur: donneesMois.jours_collaborateur,
+          jours_dr_vergez: donneesMois.jours_dr_vergez
+        },
+        consultations_cse: {
+          nombre_cse: donneesMois.nombre_cse,
+          en_traitement_attente_cse: 3, // Valeur par défaut
+          taux_transformation_cse: donneesMois.taux_transformation_cse
+        },
+        diagnostics_enfants: {
+          nombre_diagnostics_enfants: donneesMois.nombre_diagnostics_enfants,
+          en_traitement_attente_enfants: 15, // Valeur par défaut
+          taux_transformation_enfants: donneesMois.taux_transformation_enfants
+        },
+        consultations_csa: {
+          nombre_csa: 17, // Valeur par défaut
+          en_traitement_attente_csa: 0,
+          taux_transformation_csa: 0.0
+        },
+        devis: {
+          total_devis_acceptes: donneesMois.total_devis_acceptes,
+          nombre_devis_acceptes: donneesMois.nombre_devis_acceptes
+        },
+        comparaisons: {
+          debuts_traitement_evolution: Math.random() * 50 - 25, // Simulation
+          consultations_evolution: Math.random() * 30 - 15,
+          deposes_evolution: Math.random() * 20 - 10,
+          recettes_evolution: Math.random() * 25 - 12.5,
+          rdv_manques_evolution: Math.random() * 20 - 10,
+          rdv_presents_evolution: Math.random() * 25 - 12.5,
+          jours_collaborateur_evolution: Math.random() * 15 - 7.5,
+          jours_vergez_evolution: Math.random() * 40 - 20,
+          cse_evolution: Math.random() * 50 - 25,
+          diagnostics_enfants_evolution: Math.random() * 20 - 10,
+          csa_evolution: Math.random() * 40 - 20,
+          devis_evolution: Math.random() * 30 - 15
+        }
+      });
+    }
+  };
 
   const chargerTableaux = async () => {
     try {
@@ -202,11 +312,9 @@ function App() {
   const saveEdit = async (tableauId) => {
     setLoading(true);
     try {
-      // Récupérer le tableau complet
       const tableau = tableaux.find(t => t.id === tableauId);
       if (!tableau) return;
 
-      // Mettre à jour les données modifiées
       const updatedData = {
         ...tableau,
         metriques_activite: {
@@ -248,6 +356,23 @@ function App() {
         [field]: typeof value === 'string' ? parseFloat(value) || 0 : value
       }
     }));
+  };
+
+  const navigateMonth = (direction) => {
+    const currentIndex = moisOptions.findIndex(m => m === selectedMonth);
+    let newIndex = currentIndex + direction;
+    let newYear = selectedYear;
+
+    if (newIndex < 0) {
+      newIndex = 11;
+      newYear = selectedYear - 1;
+    } else if (newIndex > 11) {
+      newIndex = 0;
+      newYear = selectedYear + 1;
+    }
+
+    setSelectedMonth(moisOptions[newIndex]);
+    setSelectedYear(newYear);
   };
 
   const getEvolutionIcon = (evolution) => {
@@ -337,7 +462,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-      {/* Header moderne style PowerBI */}
+      {/* Header moderne style PowerBI avec logo */}
       <div 
         className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900"
         style={{
@@ -350,27 +475,88 @@ function App() {
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-indigo-900/85 to-purple-900/90"></div>
         <div className="relative container mx-auto p-6">
           <div className="flex items-center justify-between text-white">
-            <div>
-              <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
-                SELARL Dr VERGEZ
-              </h1>
-              <p className="text-blue-100 text-lg">Tableau de bord orthodontique • Analytics & Performance</p>
-              <div className="flex items-center mt-4 space-x-6">
-                <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                  <BarChart3 className="w-5 h-5 mr-2" />
-                  <span className="text-sm">Moyenne mensuelle: {calculerMoyenneRecettes().toLocaleString('fr-FR')}€</span>
-                </div>
-                <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                  <TrendingUp className="w-5 h-5 mr-2" />
-                  <span className="text-sm">Croissance: +{calculerCroissanceRecettes()}%</span>
+            <div className="flex items-center space-x-6">
+              {/* Logo du cabinet */}
+              <div className="flex-shrink-0">
+                <img
+                  src="https://customer-assets.emergentagent.com/job_vergez-tracker/artifacts/321ccg02_Logo%20Cabinet%20FV.png"
+                  alt="Logo Cabinet Dr Vergez"
+                  className="h-16 w-16 object-contain bg-white/10 rounded-lg p-2 backdrop-blur-sm border border-white/20"
+                />
+              </div>
+              <div>
+                <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
+                  SELARL Dr VERGEZ
+                </h1>
+                <p className="text-blue-100 text-lg">Tableau de bord orthodontique • Analytics & Performance</p>
+                <div className="flex items-center mt-4 space-x-6">
+                  <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                    <BarChart3 className="w-5 h-5 mr-2" />
+                    <span className="text-sm">Moyenne mensuelle: {calculerMoyenneRecettes().toLocaleString('fr-FR')}€</span>
+                  </div>
+                  <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                    <TrendingUp className="w-5 h-5 mr-2" />
+                    <span className="text-sm">Croissance: +{calculerCroissanceRecettes()}%</span>
+                  </div>
                 </div>
               </div>
             </div>
+            
+            {/* Sélecteur de mois/année */}
             <div className="text-right">
-              <Badge className="text-lg px-6 py-3 bg-white/20 backdrop-blur-sm border-white/30 text-white">
-                <Calendar className="w-5 h-5 mr-2" />
-                {currentData.mois} {currentData.annee}
-              </Badge>
+              <div className="flex items-center space-x-4 mb-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigateMonth(-1)}
+                  className="text-white hover:bg-white/10 border border-white/20"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </Button>
+                
+                <Badge className="text-lg px-6 py-3 bg-white/20 backdrop-blur-sm border-white/30 text-white">
+                  <Calendar className="w-5 h-5 mr-2" />
+                  {selectedMonth} {selectedYear}
+                </Badge>
+
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigateMonth(1)}
+                  className="text-white hover:bg-white/10 border border-white/20"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
+              </div>
+              
+              {/* Sélecteurs directs */}
+              <div className="flex items-center space-x-2">
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <SelectTrigger className="w-32 bg-white/10 border-white/20 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {moisOptions.map(mois => (
+                      <SelectItem key={mois} value={mois} className="capitalize">
+                        {mois}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                
+                <Select value={selectedYear.toString()} onValueChange={(year) => setSelectedYear(parseInt(year))}>
+                  <SelectTrigger className="w-20 bg-white/10 border-white/20 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {anneeOptions.map(annee => (
+                      <SelectItem key={annee} value={annee.toString()}>
+                        {annee}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </div>
         </div>
@@ -425,7 +611,7 @@ function App() {
                   <div className={`flex items-center px-3 py-1 rounded-full ${getEvolutionColor(currentData.comparaisons.recettes_evolution)} bg-white/20`}>
                     {getEvolutionIcon(currentData.comparaisons.recettes_evolution)}
                     <span className="ml-1 text-white text-sm">
-                      {currentData.comparaisons.recettes_evolution > 0 ? '+' : ''}{currentData.comparaisons.recettes_evolution}%
+                      {currentData.comparaisons.recettes_evolution > 0 ? '+' : ''}{currentData.comparaisons.recettes_evolution.toFixed(1)}%
                     </span>
                   </div>
                 </div>
@@ -445,7 +631,7 @@ function App() {
                   <div className={`flex items-center px-3 py-1 rounded-full bg-white/20`}>
                     {getEvolutionIcon(currentData.comparaisons.debuts_traitement_evolution)}
                     <span className="ml-1 text-white text-sm">
-                      +{currentData.comparaisons.debuts_traitement_evolution}%
+                      {currentData.comparaisons.debuts_traitement_evolution > 0 ? '+' : ''}{currentData.comparaisons.debuts_traitement_evolution.toFixed(1)}%
                     </span>
                   </div>
                 </div>
@@ -465,7 +651,7 @@ function App() {
                   <div className="flex items-center px-3 py-1 rounded-full bg-white/20">
                     {getEvolutionIcon(currentData.comparaisons.consultations_evolution)}
                     <span className="ml-1 text-white text-sm">
-                      {currentData.comparaisons.consultations_evolution}%
+                      {currentData.comparaisons.consultations_evolution > 0 ? '+' : ''}{currentData.comparaisons.consultations_evolution.toFixed(1)}%
                     </span>
                   </div>
                 </div>
