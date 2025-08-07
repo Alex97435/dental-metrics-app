@@ -7,7 +7,7 @@ import { Label } from './components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge } from './components/ui/badge';
 import { Alert, AlertDescription } from './components/ui/alert';
-import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X } from 'lucide-react';
 
 function App() {
   // Données historiques complètes (Janvier à Mai 2025)
@@ -120,6 +120,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({});
 
   const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8001';
 
@@ -170,13 +172,70 @@ function App() {
       
       const result = await response.json();
       if (result.success) {
-        setMessage('Données sauvegardées avec succès !');
+        const action = result.action === 'updated' ? 'modifiées' : 'créées';
+        setMessage(`Données ${action} avec succès !`);
         await chargerTableaux();
         await chargerRecommandations();
         setActiveTab('dashboard');
       }
     } catch (error) {
       setMessage('Erreur lors de la sauvegarde: ' + error.message);
+    }
+    setLoading(false);
+  };
+
+  const startEdit = (tableau) => {
+    setEditingId(tableau.id);
+    setEditData({
+      debuts_traitement: tableau.metriques_activite.debuts_traitement,
+      premieres_consultations: tableau.metriques_activite.premieres_consultations,
+      recettes_mois: tableau.metriques_activite.recettes_mois,
+      taux_transformation_enfants: tableau.diagnostics_enfants.taux_transformation_enfants
+    });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditData({});
+  };
+
+  const saveEdit = async (tableauId) => {
+    setLoading(true);
+    try {
+      // Récupérer le tableau complet
+      const tableau = tableaux.find(t => t.id === tableauId);
+      if (!tableau) return;
+
+      // Mettre à jour les données modifiées
+      const updatedData = {
+        ...tableau,
+        metriques_activite: {
+          ...tableau.metriques_activite,
+          debuts_traitement: parseInt(editData.debuts_traitement) || 0,
+          premieres_consultations: parseInt(editData.premieres_consultations) || 0,
+          recettes_mois: parseFloat(editData.recettes_mois) || 0
+        },
+        diagnostics_enfants: {
+          ...tableau.diagnostics_enfants,
+          taux_transformation_enfants: parseFloat(editData.taux_transformation_enfants) || 0
+        }
+      };
+
+      const response = await fetch(`${backendUrl}/api/tableau-bord-vergez/${tableauId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setMessage('Données modifiées avec succès !');
+        await chargerTableaux();
+        setEditingId(null);
+        setEditData({});
+      }
+    } catch (error) {
+      setMessage('Erreur lors de la modification: ' + error.message);
     }
     setLoading(false);
   };
@@ -589,22 +648,22 @@ function App() {
                   <tbody>
                     {donneesHistoriques.map((mois, index) => (
                       <tr key={index} className="border-b border-slate-700 hover:bg-slate-800/50 transition-colors">
-                        <td className="py-4 px-4">
+                        <td className="py-3 px-4">
                           <span className="font-medium text-white capitalize">{mois.mois}</span>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-3 px-4">
                           <span className="font-bold text-blue-400">{mois.recettes_mois.toLocaleString('fr-FR')}€</span>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-3 px-4">
                           <span className="font-bold text-green-400">{mois.debuts_traitement}</span>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-3 px-4">
                           <span className="font-bold text-purple-400">{mois.premieres_consultations}</span>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-3 px-4">
                           <span className="font-bold text-orange-400">{mois.taux_transformation_enfants}%</span>
                         </td>
-                        <td className="py-4 px-4">
+                        <td className="py-3 px-4">
                           <span className="font-bold text-red-400">{mois.rdv_manques}</span>
                         </td>
                       </tr>
@@ -776,12 +835,12 @@ function App() {
                           {getRecommandationIcon(reco.type)}
                           <div className="flex-1">
                             <div className="flex items-center justify-between mb-3">
-                              <h4 className="font-bold text-white text-lg">{reco.titre}</h4>
-                              <Badge variant="outline" className="text-xs bg-white/20 text-white border-white/30">
+                              <h4 className="font-bold text-blue-600 text-lg">{reco.titre}</h4>
+                              <Badge variant="outline" className="text-xs bg-white/20 text-blue-600 border-blue-300">
                                 {reco.categorie}
                               </Badge>
                             </div>
-                            <p className="text-slate-200 leading-relaxed">
+                            <p className="text-blue-600 leading-relaxed">
                               {reco.description}
                             </p>
                           </div>
@@ -817,6 +876,7 @@ function App() {
                         <th className="text-left py-4 px-4 font-semibold text-slate-300">Consultations</th>
                         <th className="text-left py-4 px-4 font-semibold text-slate-300">Taux transfo. enfants</th>
                         <th className="text-left py-4 px-4 font-semibold text-slate-300">Date création</th>
+                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -826,19 +886,89 @@ function App() {
                             <span className="font-medium text-white capitalize">{tableau.mois} {tableau.annee}</span>
                           </td>
                           <td className="py-4 px-4">
-                            <span className="font-bold text-blue-400">{tableau.metriques_activite.recettes_mois.toLocaleString('fr-FR')}€</span>
+                            {editingId === tableau.id ? (
+                              <Input
+                                type="number"
+                                value={editData.recettes_mois}
+                                onChange={(e) => setEditData({...editData, recettes_mois: e.target.value})}
+                                className="bg-slate-700 border-slate-600 text-white w-32"
+                              />
+                            ) : (
+                              <span className="font-bold text-blue-400">{tableau.metriques_activite.recettes_mois.toLocaleString('fr-FR')}€</span>
+                            )}
                           </td>
                           <td className="py-4 px-4">
-                            <span className="font-bold text-green-400">{tableau.metriques_activite.debuts_traitement}</span>
+                            {editingId === tableau.id ? (
+                              <Input
+                                type="number"
+                                value={editData.debuts_traitement}
+                                onChange={(e) => setEditData({...editData, debuts_traitement: e.target.value})}
+                                className="bg-slate-700 border-slate-600 text-white w-20"
+                              />
+                            ) : (
+                              <span className="font-bold text-green-400">{tableau.metriques_activite.debuts_traitement}</span>
+                            )}
                           </td>
                           <td className="py-4 px-4">
-                            <span className="font-bold text-purple-400">{tableau.metriques_activite.premieres_consultations}</span>
+                            {editingId === tableau.id ? (
+                              <Input
+                                type="number"
+                                value={editData.premieres_consultations}
+                                onChange={(e) => setEditData({...editData, premieres_consultations: e.target.value})}
+                                className="bg-slate-700 border-slate-600 text-white w-20"
+                              />
+                            ) : (
+                              <span className="font-bold text-purple-400">{tableau.metriques_activite.premieres_consultations}</span>
+                            )}
                           </td>
                           <td className="py-4 px-4">
-                            <span className="font-bold text-orange-400">{tableau.diagnostics_enfants.taux_transformation_enfants}%</span>
+                            {editingId === tableau.id ? (
+                              <Input
+                                type="number"
+                                step="0.1"
+                                value={editData.taux_transformation_enfants}
+                                onChange={(e) => setEditData({...editData, taux_transformation_enfants: e.target.value})}
+                                className="bg-slate-700 border-slate-600 text-white w-20"
+                              />
+                            ) : (
+                              <span className="font-bold text-orange-400">{tableau.diagnostics_enfants.taux_transformation_enfants}%</span>
+                            )}
                           </td>
                           <td className="py-4 px-4 text-sm text-slate-400">
                             {new Date(tableau.date_creation).toLocaleDateString('fr-FR')}
+                          </td>
+                          <td className="py-4 px-4">
+                            <div className="flex items-center space-x-2">
+                              {editingId === tableau.id ? (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => saveEdit(tableau.id)}
+                                    disabled={loading}
+                                    className="bg-green-600 hover:bg-green-700 text-white"
+                                  >
+                                    <Save className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={cancelEdit}
+                                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </>
+                              ) : (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  onClick={() => startEdit(tableau)}
+                                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                              )}
+                            </div>
                           </td>
                         </tr>
                       ))}

@@ -212,27 +212,268 @@ def calculer_recommandations_vergez(donnees: TableauBordVergez, donnees_preceden
     
     return recommandations
 
+# Fonction pour initialiser les données historiques
+async def init_historical_data():
+    """Initialise les données historiques janvier-mai 2025 si elles n'existent pas"""
+    donnees_historiques = [
+        {
+            "id": generate_id(),
+            "mois": "janvier",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 35,
+                "premieres_consultations": 42,
+                "deposes": 20,
+                "recettes_mois": 166000.0,
+                "rdv_manques": 120,
+                "rdv_presents": 850
+            },
+            "ressources_humaines": {
+                "jours_collaborateur": 18,
+                "jours_dr_vergez": 12
+            },
+            "consultations_cse": {
+                "nombre_cse": 18,
+                "en_traitement_attente_cse": 4,
+                "taux_transformation_cse": 22.0
+            },
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 20,
+                "en_traitement_attente_enfants": 15,
+                "taux_transformation_enfants": 75.0
+            },
+            "consultations_csa": {
+                "nombre_csa": 15,
+                "en_traitement_attente_csa": 2,
+                "taux_transformation_csa": 13.0
+            },
+            "devis": {
+                "total_devis_acceptes": 140000.0,
+                "nombre_devis_acceptes": 28
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": 12.0,
+                "consultations_evolution": 5.0,
+                "deposes_evolution": -8.0,
+                "recettes_evolution": 8.0,
+                "rdv_manques_evolution": -5.0,
+                "rdv_presents_evolution": 15.0,
+                "jours_collaborateur_evolution": 0.0,
+                "jours_vergez_evolution": 20.0,
+                "cse_evolution": 10.0,
+                "diagnostics_enfants_evolution": 0.0,
+                "csa_evolution": -20.0,
+                "devis_evolution": 12.0
+            },
+            "date_creation": datetime(2025, 2, 1, 10, 0, 0),
+            "date_modification": datetime(2025, 2, 1, 10, 0, 0)
+        },
+        {
+            "id": generate_id(),
+            "mois": "février",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 38,
+                "premieres_consultations": 45,
+                "deposes": 25,
+                "recettes_mois": 179000.0,
+                "rdv_manques": 115,
+                "rdv_presents": 880
+            },
+            "ressources_humaines": {
+                "jours_collaborateur": 17,
+                "jours_dr_vergez": 11
+            },
+            "consultations_cse": {
+                "nombre_cse": 22,
+                "en_traitement_attente_cse": 5,
+                "taux_transformation_cse": 23.0
+            },
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 22,
+                "en_traitement_attente_enfants": 16,
+                "taux_transformation_enfants": 72.0
+            },
+            "consultations_csa": {
+                "nombre_csa": 18,
+                "en_traitement_attente_csa": 3,
+                "taux_transformation_csa": 17.0
+            },
+            "devis": {
+                "total_devis_acceptes": 155000.0,
+                "nombre_devis_acceptes": 31
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": 18.0,
+                "consultations_evolution": 8.0,
+                "deposes_evolution": -5.0,
+                "recettes_evolution": 12.0,
+                "rdv_manques_evolution": -8.0,
+                "rdv_presents_evolution": 18.0,
+                "jours_collaborateur_evolution": -5.0,
+                "jours_vergez_evolution": 10.0,
+                "cse_evolution": 15.0,
+                "diagnostics_enfants_evolution": 3.0,
+                "csa_evolution": -15.0,
+                "devis_evolution": 18.0
+            },
+            "date_creation": datetime(2025, 3, 1, 10, 0, 0),
+            "date_modification": datetime(2025, 3, 1, 10, 0, 0)
+        },
+        {
+            "id": generate_id(),
+            "mois": "mars",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 33,
+                "premieres_consultations": 39,
+                "deposes": 18,
+                "recettes_mois": 154000.0,
+                "rdv_manques": 125,
+                "rdv_presents": 820
+            },
+            "ressources_humaines": {
+                "jours_collaborateur": 20,
+                "jours_dr_vergez": 14
+            },
+            "consultations_cse": {
+                "nombre_cse": 16,
+                "en_traitement_attente_cse": 2,
+                "taux_transformation_cse": 12.5
+            },
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 18,
+                "en_traitement_attente_enfants": 14,
+                "taux_transformation_enfants": 76.0
+            },
+            "consultations_csa": {
+                "nombre_csa": 20,
+                "en_traitement_attente_csa": 4,
+                "taux_transformation_csa": 20.0
+            },
+            "devis": {
+                "total_devis_acceptes": 130000.0,
+                "nombre_devis_acceptes": 26
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": -8.0,
+                "consultations_evolution": -12.0,
+                "deposes_evolution": -20.0,
+                "recettes_evolution": -5.0,
+                "rdv_manques_evolution": 8.0,
+                "rdv_presents_evolution": -2.0,
+                "jours_collaborateur_evolution": 11.0,
+                "jours_vergez_evolution": 27.0,
+                "cse_evolution": -20.0,
+                "diagnostics_enfants_evolution": -8.0,
+                "csa_evolution": 5.0,
+                "devis_evolution": -8.0
+            },
+            "date_creation": datetime(2025, 4, 1, 10, 0, 0),
+            "date_modification": datetime(2025, 4, 1, 10, 0, 0)
+        },
+        {
+            "id": generate_id(),
+            "mois": "avril",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 40,
+                "premieres_consultations": 41,
+                "deposes": 23,
+                "recettes_mois": 172000.0,
+                "rdv_manques": 118,
+                "rdv_presents": 895
+            },
+            "ressources_humaines": {
+                "jours_collaborateur": 19,
+                "jours_dr_vergez": 12
+            },
+            "consultations_cse": {
+                "nombre_cse": 19,
+                "en_traitement_attente_cse": 3,
+                "taux_transformation_cse": 16.0
+            },
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 21,
+                "en_traitement_attente_enfants": 16,
+                "taux_transformation_enfants": 78.0
+            },
+            "consultations_csa": {
+                "nombre_csa": 16,
+                "en_traitement_attente_csa": 1,
+                "taux_transformation_csa": 6.0
+            },
+            "devis": {
+                "total_devis_acceptes": 145000.0,
+                "nombre_devis_acceptes": 29
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": 25.0,
+                "consultations_evolution": 2.0,
+                "deposes_evolution": -8.0,
+                "recettes_evolution": 8.0,
+                "rdv_manques_evolution": 2.0,
+                "rdv_presents_evolution": 8.0,
+                "jours_collaborateur_evolution": 5.0,
+                "jours_vergez_evolution": 20.0,
+                "cse_evolution": 18.0,
+                "diagnostics_enfants_evolution": 5.0,
+                "csa_evolution": -30.0,
+                "devis_evolution": 5.0
+            },
+            "date_creation": datetime(2025, 5, 1, 10, 0, 0),
+            "date_modification": datetime(2025, 5, 1, 10, 0, 0)
+        }
+    ]
+    
+    # Vérifier si les données existent déjà
+    for donnee in donnees_historiques:
+        existing = await db.tableaux_bord_vergez.find_one({
+            "mois": donnee["mois"], 
+            "annee": donnee["annee"]
+        })
+        if not existing:
+            await db.tableaux_bord_vergez.insert_one(donnee)
+            print(f"Données historiques ajoutées pour {donnee['mois']} {donnee['annee']}")
+
 # API Routes
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "service": "Cabinet Dr Vergez - Tableau de bord"}
 
+@app.on_event("startup")
+async def startup_event():
+    """Initialise les données historiques au démarrage"""
+    await init_historical_data()
+
 @app.post("/api/tableau-bord-vergez")
 async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
     try:
-        # Générer un ID unique
-        donnees.id = generate_id()
-        donnees.date_creation = datetime.utcnow()
-        donnees.date_modification = datetime.utcnow()
+        # Vérifier si un tableau existe déjà pour ce mois/année
+        existing = await db.tableaux_bord_vergez.find_one({
+            "mois": donnees.mois,
+            "annee": donnees.annee
+        })
         
-        # Convertir en dict pour MongoDB
-        donnees_dict = donnees.dict()
-        
-        # Insérer dans MongoDB
-        result = await db.tableaux_bord_vergez.insert_one(donnees_dict)
+        if existing:
+            # Mettre à jour le tableau existant
+            donnees.id = existing["id"]
+            donnees.date_modification = datetime.utcnow()
+            donnees_dict = donnees.dict()
+            
+            await db.tableaux_bord_vergez.update_one(
+                {"id": existing["id"]},
+                {"$set": donnees_dict}
+            )
+        else:
+            # Créer un nouveau tableau
+            donnees.id = generate_id()
+            donnees.date_creation = datetime.utcnow()
+            donnees.date_modification = datetime.utcnow()
+            donnees_dict = donnees.dict()
+            await db.tableaux_bord_vergez.insert_one(donnees_dict)
         
         # Générer les recommandations
-        # Chercher le même mois année précédente pour comparaison
         donnees_annee_precedente = await db.tableaux_bord_vergez.find_one({
             "mois": donnees.mois,
             "annee": donnees.annee - 1
@@ -265,6 +506,7 @@ async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
         return {
             "success": True,
             "id": donnees.id,
+            "action": "updated" if existing else "created",
             "recommandations": recommandations_response
         }
         
@@ -274,7 +516,7 @@ async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
 @app.get("/api/tableau-bord-vergez")
 async def lister_tableaux_bord_vergez():
     try:
-        tableaux = await db.tableaux_bord_vergez.find({}).sort([("annee", -1), ("mois", -1)]).to_list(length=100)
+        tableaux = await db.tableaux_bord_vergez.find({}).sort([("annee", -1), ("date_creation", -1)]).to_list(length=100)
         # Clean MongoDB ObjectIds
         cleaned_tableaux = [clean_mongo_doc(tableau) for tableau in tableaux]
         return {"tableaux": cleaned_tableaux}
