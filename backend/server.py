@@ -269,6 +269,8 @@ async def obtenir_tableau_bord(tableau_id: str):
         if not tableau:
             raise HTTPException(status_code=404, detail="Tableau de bord non trouvé")
         return clean_mongo_doc(tableau)
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
