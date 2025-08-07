@@ -97,6 +97,20 @@ class Recommandation(BaseModel):
 def generate_id():
     return str(uuid.uuid4())
 
+def clean_mongo_doc(doc):
+    """Remove MongoDB ObjectId fields that cause serialization issues"""
+    if isinstance(doc, dict):
+        # Remove the _id field if it exists
+        if '_id' in doc:
+            del doc['_id']
+        # Recursively clean nested dictionaries
+        for key, value in doc.items():
+            if isinstance(value, dict):
+                doc[key] = clean_mongo_doc(value)
+            elif isinstance(value, list):
+                doc[key] = [clean_mongo_doc(item) if isinstance(item, dict) else item for item in value]
+    return doc
+
 def calculer_recommandations(donnees_actuelles: TableauBordMensuel, donnees_precedentes: Optional[TableauBordMensuel] = None) -> List[Dict]:
     recommandations = []
     
