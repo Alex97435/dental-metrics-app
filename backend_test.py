@@ -3,7 +3,7 @@ import sys
 import json
 from datetime import datetime
 
-class OrthodonticDashboardAPITester:
+class DrVergezDashboardAPITester:
     def __init__(self, base_url="https://7dafaea7-da3e-4138-8969-29ffeb8c5830.preview.emergentagent.com"):
         self.base_url = base_url
         self.tests_run = 0
@@ -36,7 +36,7 @@ class OrthodonticDashboardAPITester:
                 print(f"✅ Passed - Status: {response.status_code}")
                 try:
                     response_data = response.json()
-                    print(f"   Response: {json.dumps(response_data, indent=2)[:200]}...")
+                    print(f"   Response: {json.dumps(response_data, indent=2)[:300]}...")
                     return True, response_data
                 except:
                     return True, {}
@@ -57,159 +57,179 @@ class OrthodonticDashboardAPITester:
         """Test health check endpoint"""
         return self.run_test("Health Check", "GET", "api/health", 200)
 
-    def test_create_tableau_bord(self):
-        """Test creating a new tableau de bord"""
+    def test_create_tableau_bord_vergez(self):
+        """Test creating a new tableau de bord vergez with May 2025 data"""
         test_data = {
-            "mois": "juillet",
-            "annee": 2024,
-            "dossiers_inactifs": {
-                "nouveaux_cas": 100,
-                "consultants_attente": 200,
-                "en_attente": 10,
-                "abandons": 50,
-                "demenagements": 20,
-                "soins_termines": 5,
-                "traitements_finis": 150,
-                "repris_archives": 10,
-                "interruptions": 2
+            "mois": "mai",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 41,
+                "premieres_consultations": 37,
+                "deposes": 22,
+                "recettes_mois": 167000.0,
+                "rdv_manques": 131,
+                "rdv_presents": 900
             },
-            "dossiers_actifs": {
-                "phase_1": 300,
-                "phase_2": 50,
-                "phase_3": 10,
-                "pause": 15,
-                "pause_1": 5,
-                "pause_2": 2,
-                "pause_3": 1,
-                "contentions": 80
+            "ressources_humaines": {
+                "jours_collaborateur": 19,
+                "jours_dr_vergez": 13
             },
-            "activite": {
-                "premieres_consultations": 45,
-                "compte_rendus": 10,
-                "debuts_traitement": 35,
-                "poses_amovibles": 5,
-                "poses_fixes": 8,
-                "abandons_departs": 25
+            "consultations_cse": {
+                "nombre_cse": 20,
+                "en_traitement_attente_cse": 3,
+                "taux_transformation_cse": 15.0
             },
-            "recettes": {
-                "especes": 5000.50,
-                "cheques": 8000.75,
-                "cartes_bancaires": 120000.00,
-                "virements": 40000.25,
-                "prelevements": 15000.00
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 19,
+                "en_traitement_attente_enfants": 15,
+                "taux_transformation_enfants": 79.0
             },
-            "actes": {
-                "cs": {"coefficient": 10.0, "montant": 500.0, "nombre": 10},
-                "csd": {"coefficient": 30.0, "montant": 800.0, "nombre": 30},
-                "hn": {"coefficient": 65.0, "montant": 75000.0, "nombre": 65},
-                "to": {"coefficient": 8000.0, "montant": 90000.0, "nombre": 250},
-                "z": {"coefficient": 2500.0, "montant": 3500.0, "nombre": 160}
+            "consultations_csa": {
+                "nombre_csa": 17,
+                "en_traitement_attente_csa": 0,
+                "taux_transformation_csa": 0.0
+            },
+            "devis": {
+                "total_devis_acceptes": 120000.0,
+                "nombre_devis_acceptes": 23
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": 37.0,
+                "consultations_evolution": -3.0,
+                "deposes_evolution": -12.0,
+                "recettes_evolution": 1.0,
+                "rdv_manques_evolution": 9.0,
+                "rdv_presents_evolution": 12.0,
+                "jours_collaborateur_evolution": 6.0,
+                "jours_vergez_evolution": 30.0,
+                "cse_evolution": 33.0,
+                "diagnostics_enfants_evolution": -5.0,
+                "csa_evolution": -26.0,
+                "devis_evolution": -26.0
             }
         }
         
-        success, response = self.run_test("Create Tableau de Bord", "POST", "api/tableau-bord", 200, test_data)
+        success, response = self.run_test("Create Tableau de Bord Vergez", "POST", "api/tableau-bord-vergez", 200, test_data)
         if success and 'id' in response:
             self.created_tableau_id = response['id']
             print(f"   Created tableau ID: {self.created_tableau_id}")
         return success
 
-    def test_get_tableaux_bord(self):
-        """Test getting list of tableaux de bord"""
-        return self.run_test("Get Tableaux de Bord List", "GET", "api/tableau-bord", 200)
+    def test_get_tableaux_bord_vergez(self):
+        """Test getting list of tableaux de bord vergez"""
+        return self.run_test("Get Tableaux de Bord Vergez List", "GET", "api/tableau-bord-vergez", 200)
 
-    def test_get_single_tableau_bord(self):
-        """Test getting a single tableau de bord by ID"""
+    def test_get_single_tableau_bord_vergez(self):
+        """Test getting a single tableau de bord vergez by ID"""
         if not self.created_tableau_id:
             print("❌ Skipping single tableau test - no ID available")
             return False
         
         return self.run_test(
-            "Get Single Tableau de Bord", 
+            "Get Single Tableau de Bord Vergez", 
             "GET", 
-            f"api/tableau-bord/{self.created_tableau_id}", 
+            f"api/tableau-bord-vergez/{self.created_tableau_id}", 
             200
         )
 
-    def test_update_tableau_bord(self):
-        """Test updating a tableau de bord"""
+    def test_update_tableau_bord_vergez(self):
+        """Test updating a tableau de bord vergez"""
         if not self.created_tableau_id:
             print("❌ Skipping update test - no ID available")
             return False
             
         update_data = {
-            "mois": "juillet",
-            "annee": 2024,
-            "dossiers_inactifs": {
-                "nouveaux_cas": 110,  # Updated value
-                "consultants_attente": 200,
-                "en_attente": 10,
-                "abandons": 50,
-                "demenagements": 20,
-                "soins_termines": 5,
-                "traitements_finis": 150,
-                "repris_archives": 10,
-                "interruptions": 2
+            "mois": "mai",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 45,  # Updated value
+                "premieres_consultations": 40,  # Updated value
+                "deposes": 22,
+                "recettes_mois": 170000.0,  # Updated value
+                "rdv_manques": 131,
+                "rdv_presents": 900
             },
-            "dossiers_actifs": {
-                "phase_1": 300,
-                "phase_2": 50,
-                "phase_3": 10,
-                "pause": 15,
-                "pause_1": 5,
-                "pause_2": 2,
-                "pause_3": 1,
-                "contentions": 80
+            "ressources_humaines": {
+                "jours_collaborateur": 19,
+                "jours_dr_vergez": 13
             },
-            "activite": {
-                "premieres_consultations": 50,  # Updated value
-                "compte_rendus": 10,
-                "debuts_traitement": 35,
-                "poses_amovibles": 5,
-                "poses_fixes": 8,
-                "abandons_departs": 25
+            "consultations_cse": {
+                "nombre_cse": 20,
+                "en_traitement_attente_cse": 3,
+                "taux_transformation_cse": 15.0
             },
-            "recettes": {
-                "especes": 5500.50,  # Updated value
-                "cheques": 8000.75,
-                "cartes_bancaires": 120000.00,
-                "virements": 40000.25,
-                "prelevements": 15000.00
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 19,
+                "en_traitement_attente_enfants": 15,
+                "taux_transformation_enfants": 79.0
             },
-            "actes": {
-                "cs": {"coefficient": 10.0, "montant": 500.0, "nombre": 10},
-                "csd": {"coefficient": 30.0, "montant": 800.0, "nombre": 30},
-                "hn": {"coefficient": 65.0, "montant": 75000.0, "nombre": 65},
-                "to": {"coefficient": 8000.0, "montant": 90000.0, "nombre": 250},
-                "z": {"coefficient": 2500.0, "montant": 3500.0, "nombre": 160}
+            "consultations_csa": {
+                "nombre_csa": 17,
+                "en_traitement_attente_csa": 0,
+                "taux_transformation_csa": 0.0
+            },
+            "devis": {
+                "total_devis_acceptes": 120000.0,
+                "nombre_devis_acceptes": 23
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": 37.0,
+                "consultations_evolution": -3.0,
+                "deposes_evolution": -12.0,
+                "recettes_evolution": 1.0,
+                "rdv_manques_evolution": 9.0,
+                "rdv_presents_evolution": 12.0,
+                "jours_collaborateur_evolution": 6.0,
+                "jours_vergez_evolution": 30.0,
+                "cse_evolution": 33.0,
+                "diagnostics_enfants_evolution": -5.0,
+                "csa_evolution": -26.0,
+                "devis_evolution": -26.0
             }
         }
         
         return self.run_test(
-            "Update Tableau de Bord", 
+            "Update Tableau de Bord Vergez", 
             "PUT", 
-            f"api/tableau-bord/{self.created_tableau_id}", 
+            f"api/tableau-bord-vergez/{self.created_tableau_id}", 
             200, 
             update_data
         )
 
-    def test_get_recommandations(self):
-        """Test getting recommendations"""
-        return self.run_test("Get Recommandations", "GET", "api/recommandations", 200)
+    def test_get_recommandations_vergez(self):
+        """Test getting recommendations vergez"""
+        return self.run_test("Get Recommandations Vergez", "GET", "api/recommandations-vergez", 200)
 
-    def test_get_statistiques(self):
-        """Test getting statistics"""
-        return self.run_test("Get Statistiques", "GET", "api/statistiques", 200)
+    def test_get_statistiques_vergez(self):
+        """Test getting statistics vergez"""
+        return self.run_test("Get Statistiques Vergez", "GET", "api/statistiques-vergez", 200)
 
-    def test_delete_tableau_bord(self):
-        """Test deleting a tableau de bord"""
+    def test_create_rectification_recettes(self):
+        """Test creating a rectification de recettes"""
+        rectification_data = {
+            "mois": "avril",
+            "annee": 2025,
+            "montant_initial": 150000.0,
+            "montant_rectifie": 155000.0,
+            "raison": "Ajustement suite à encaissement tardif"
+        }
+        
+        return self.run_test("Create Rectification Recettes", "POST", "api/rectifications-recettes", 200, rectification_data)
+
+    def test_get_rectifications_recettes(self):
+        """Test getting rectifications de recettes"""
+        return self.run_test("Get Rectifications Recettes", "GET", "api/rectifications-recettes", 200)
+
+    def test_delete_tableau_bord_vergez(self):
+        """Test deleting a tableau de bord vergez"""
         if not self.created_tableau_id:
             print("❌ Skipping delete test - no ID available")
             return False
             
         return self.run_test(
-            "Delete Tableau de Bord", 
+            "Delete Tableau de Bord Vergez", 
             "DELETE", 
-            f"api/tableau-bord/{self.created_tableau_id}", 
+            f"api/tableau-bord-vergez/{self.created_tableau_id}", 
             200
         )
 
@@ -219,48 +239,50 @@ class OrthodonticDashboardAPITester:
         
         # Test getting non-existent tableau
         success1, _ = self.run_test(
-            "Get Non-existent Tableau", 
+            "Get Non-existent Tableau Vergez", 
             "GET", 
-            "api/tableau-bord/non-existent-id", 
+            "api/tableau-bord-vergez/non-existent-id", 
             404
         )
         
         # Test updating non-existent tableau
         success2, _ = self.run_test(
-            "Update Non-existent Tableau", 
+            "Update Non-existent Tableau Vergez", 
             "PUT", 
-            "api/tableau-bord/non-existent-id", 
+            "api/tableau-bord-vergez/non-existent-id", 
             404,
             {"mois": "test", "annee": 2024}
         )
         
         # Test deleting non-existent tableau
         success3, _ = self.run_test(
-            "Delete Non-existent Tableau", 
+            "Delete Non-existent Tableau Vergez", 
             "DELETE", 
-            "api/tableau-bord/non-existent-id", 
+            "api/tableau-bord-vergez/non-existent-id", 
             404
         )
         
         return success1 and success2 and success3
 
 def main():
-    print("🏥 Testing Orthodontic Dashboard API")
-    print("=" * 50)
+    print("🏥 Testing Dr Vergez Orthodontic Dashboard API")
+    print("=" * 60)
     
-    tester = OrthodonticDashboardAPITester()
+    tester = DrVergezDashboardAPITester()
     
     # Run all tests
     tests = [
         tester.test_health_endpoint,
-        tester.test_create_tableau_bord,
-        tester.test_get_tableaux_bord,
-        tester.test_get_single_tableau_bord,
-        tester.test_update_tableau_bord,
-        tester.test_get_recommandations,
-        tester.test_get_statistiques,
+        tester.test_create_tableau_bord_vergez,
+        tester.test_get_tableaux_bord_vergez,
+        tester.test_get_single_tableau_bord_vergez,
+        tester.test_update_tableau_bord_vergez,
+        tester.test_get_recommandations_vergez,
+        tester.test_get_statistiques_vergez,
+        tester.test_create_rectification_recettes,
+        tester.test_get_rectifications_recettes,
         tester.test_error_cases,
-        tester.test_delete_tableau_bord,  # Delete at the end
+        tester.test_delete_tableau_bord_vergez,  # Delete at the end
     ]
     
     for test in tests:
@@ -270,7 +292,7 @@ def main():
             print(f"❌ Test failed with exception: {str(e)}")
     
     # Print final results
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 60)
     print(f"📊 Final Results: {tester.tests_passed}/{tester.tests_run} tests passed")
     
     if tester.tests_passed == tester.tests_run:
