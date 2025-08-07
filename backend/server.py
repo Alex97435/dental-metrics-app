@@ -309,7 +309,9 @@ async def obtenir_recommandations():
             "date_creation": {"$gte": date_limite}
         }).sort("priorite", 1).to_list(length=50)
         
-        return {"recommandations": recommandations}
+        # Clean MongoDB ObjectIds
+        cleaned_recommandations = [clean_mongo_doc(reco) for reco in recommandations]
+        return {"recommandations": cleaned_recommandations}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
