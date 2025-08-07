@@ -23,14 +23,19 @@ MONGO_URL = os.environ.get('MONGO_URL')
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.orthodontie_vergez
 
-# Pydantic models
+# Pydantic models complets
 class MetriquesActivite(BaseModel):
     debuts_traitement: int = 0
+    cumul_debuts_traitement: int = 0
     premieres_consultations: int = 0
+    cumul_premieres_consultations: int = 0
     deposes: int = 0
+    cumul_deposes: int = 0
     recettes_mois: float = 0.0
+    cumul_recettes: float = 0.0
     rdv_manques: int = 0
     rdv_presents: int = 0
+    taux_rdv_manques: float = 0.0
 
 class RessourcesHumaines(BaseModel):
     jours_collaborateur: int = 0
@@ -38,26 +43,32 @@ class RessourcesHumaines(BaseModel):
 
 class ConsultationsCSE(BaseModel):
     nombre_cse: int = 0
+    cumul_cse: int = 0
     en_traitement_attente_cse: int = 0
+    cumul_traitement_cse: int = 0
     taux_transformation_cse: float = 0.0
 
 class DiagnosticsEnfants(BaseModel):
     nombre_diagnostics_enfants: int = 0
+    cumul_diag_enfants: int = 0
     en_traitement_attente_enfants: int = 0
+    cumul_traitement_diag: int = 0
     taux_transformation_enfants: float = 0.0
 
 class ConsultationsCSA(BaseModel):
     nombre_csa: int = 0
+    cumul_csa: int = 0
     en_traitement_attente_csa: int = 0
+    cumul_traitement_csa: int = 0
     taux_transformation_csa: float = 0.0
 
 class Devis(BaseModel):
     total_devis_acceptes: float = 0.0
     nombre_devis_acceptes: int = 0
 
-class Comparaisons(BaseModel):
+class ComparaisonsAnnuelles(BaseModel):
     debuts_traitement_evolution: float = 0.0
-    consultations_evolution: float = 0.0
+    premieres_consultations_evolution: float = 0.0
     deposes_evolution: float = 0.0
     recettes_evolution: float = 0.0
     rdv_manques_evolution: float = 0.0
@@ -65,11 +76,15 @@ class Comparaisons(BaseModel):
     jours_collaborateur_evolution: float = 0.0
     jours_vergez_evolution: float = 0.0
     cse_evolution: float = 0.0
+    cse_traitement_evolution: float = 0.0
     diagnostics_enfants_evolution: float = 0.0
+    diagnostics_traitement_evolution: float = 0.0
     csa_evolution: float = 0.0
-    devis_evolution: float = 0.0
+    csa_traitement_evolution: float = 0.0
+    devis_total_evolution: float = 0.0
+    devis_nombre_evolution: float = 0.0
 
-class TableauBordVergez(BaseModel):
+class TableauBordComplet(BaseModel):
     id: str = None
     mois: str
     annee: int
@@ -79,7 +94,7 @@ class TableauBordVergez(BaseModel):
     diagnostics_enfants: DiagnosticsEnfants = DiagnosticsEnfants()
     consultations_csa: ConsultationsCSA = ConsultationsCSA()
     devis: Devis = Devis()
-    comparaisons: Comparaisons = Comparaisons()
+    comparaisons: ComparaisonsAnnuelles = ComparaisonsAnnuelles()
     date_creation: datetime = None
     date_modification: datetime = None
 
@@ -108,10 +123,8 @@ def generate_id():
 def clean_mongo_doc(doc):
     """Remove MongoDB ObjectId fields that cause serialization issues"""
     if isinstance(doc, dict):
-        # Remove the _id field if it exists
         if '_id' in doc:
             del doc['_id']
-        # Recursively clean nested dictionaries
         for key, value in doc.items():
             if isinstance(value, dict):
                 doc[key] = clean_mongo_doc(value)
@@ -119,39 +132,45 @@ def clean_mongo_doc(doc):
                 doc[key] = [clean_mongo_doc(item) if isinstance(item, dict) else item for item in value]
     return doc
 
-def calculer_recommandations_vergez(donnees: TableauBordVergez, donnees_precedentes: Optional[TableauBordVergez] = None) -> List[Dict]:
+def calculer_recommandations_completes(donnees: TableauBordComplet, donnees_precedentes: Optional[TableauBordComplet] = None) -> List[Dict]:
     recommandations = []
     
     # Analyse du taux de transformation CSE
     if donnees.consultations_cse.taux_transformation_cse < 20:
         recommandations.append({
             "type": "alerte",
-            "categorie": "Transformation",
-            "titre": "Taux de transformation CSE faible",
-            "description": f"Le taux de transformation CSE ({donnees.consultations_cse.taux_transformation_cse}%) est très bas. Analysez les causes et améliorez le processus de conversion.",
+            "categorie": "Transformation CSE",
+            "titre": "Taux de transformation CSE critique",
+            "description": f"Le taux de transformation CSE ({donnees.consultations_cse.taux_transformation_cse}%) est très bas. Objectif recommandé : >25%. Analysez les causes et renforcez l'accompagnement post-consultation.",
             "priorite": 1
         })
     
-    # Analyse des rendez-vous manqués
-    taux_rdv_manques = (donnees.metriques_activite.rdv_manques / (donnees.metriques_activite.rdv_manques + donnees.metriques_activite.rdv_presents) * 100) if (donnees.metriques_activite.rdv_manques + donnees.metriques_activite.rdv_presents) > 0 else 0
-    
-    if taux_rdv_manques > 12:
+    # Analyse du taux de RDV manqués
+    if donnees.metriques_activite.taux_rdv_manques > 15:
         recommandations.append({
             "type": "alerte",
             "categorie": "Organisation",
-            "titre": "Taux de rendez-vous manqués élevé",
-            "description": f"Taux de RDV manqués : {taux_rdv_manques:.1f}%. Renforcez les rappels et la communication avec les patients.",
+            "titre": "Taux de RDV manqués élevé",
+            "description": f"Taux de RDV manqués : {donnees.metriques_activite.taux_rdv_manques:.1f}%. Objectif : <15%. Renforcez les rappels automatiques et la communication patient.",
             "priorite": 1
         })
     
-    # Analyse des recettes
-    if donnees.metriques_activite.recettes_mois < 150000:
+    # Analyse des recettes vs objectif
+    if donnees.metriques_activite.recettes_mois < 170000:
         recommandations.append({
             "type": "suggestion",
-            "categorie": "Recettes",
+            "categorie": "Performance Financière",
             "titre": "Objectif de recettes non atteint",
-            "description": f"Recettes mensuelles ({donnees.metriques_activite.recettes_mois:,.0f}€) sous l'objectif de 150K€. Renforcez l'activité commerciale.",
+            "description": f"Recettes mensuelles ({donnees.metriques_activite.recettes_mois:,.0f}€) sous l'objectif de 170K€. Analysez les débuts de traitement et la conversion des devis.",
             "priorite": 2
+        })
+    elif donnees.metriques_activite.recettes_mois > 180000:
+        recommandations.append({
+            "type": "info",
+            "categorie": "Performance Financière",
+            "titre": "Excellent mois financier",
+            "description": f"Recettes mensuelles ({donnees.metriques_activite.recettes_mois:,.0f}€) dépassent l'objectif ! Continuez cette dynamique.",
+            "priorite": 3
         })
     
     # Analyse du taux de transformation enfants
@@ -159,17 +178,27 @@ def calculer_recommandations_vergez(donnees: TableauBordVergez, donnees_preceden
         recommandations.append({
             "type": "suggestion",
             "categorie": "Pédodontie",
-            "titre": "Améliorer la conversion enfants",
-            "description": f"Taux de transformation enfants ({donnees.diagnostics_enfants.taux_transformation_enfants}%) peut être amélioré. Renforcez l'approche parents-enfants.",
+            "titre": "Améliorer la conversion en pédodontie",
+            "description": f"Taux de transformation enfants ({donnees.diagnostics_enfants.taux_transformation_enfants}%) sous l'objectif de 70%. Renforcez l'approche famille et la pédagogie.",
             "priorite": 2
         })
     elif donnees.diagnostics_enfants.taux_transformation_enfants > 75:
         recommandations.append({
             "type": "info",
             "categorie": "Pédodontie",
-            "titre": "Excellente performance enfants",
-            "description": f"Taux de transformation enfants ({donnees.diagnostics_enfants.taux_transformation_enfants}%) excellent ! Continuez cette approche.",
+            "titre": "Excellente performance en pédodontie",
+            "description": f"Taux de transformation enfants ({donnees.diagnostics_enfants.taux_transformation_enfants}%) excellent ! Reproduisez cette approche.",
             "priorite": 3
+        })
+    
+    # Analyse CSA (problématique si 0%)
+    if donnees.consultations_csa.taux_transformation_csa == 0 and donnees.consultations_csa.nombre_csa > 0:
+        recommandations.append({
+            "type": "alerte",
+            "categorie": "Transformation CSA",
+            "titre": "Aucune conversion CSA",
+            "description": f"{donnees.consultations_csa.nombre_csa} consultations CSA sans conversion. Revoyez le processus et la tarification des appareillages.",
+            "priorite": 1
         })
     
     # Analyse des devis
@@ -178,196 +207,108 @@ def calculer_recommandations_vergez(donnees: TableauBordVergez, donnees_preceden
             "type": "suggestion",
             "categorie": "Commercial",
             "titre": "Augmenter les devis acceptés",
-            "description": f"Seulement {donnees.devis.nombre_devis_acceptes} devis acceptés ce mois. Travaillez la présentation des devis et le closing.",
+            "description": f"Seulement {donnees.devis.nombre_devis_acceptes} devis acceptés ce mois (objectif : 30). Travaillez la présentation et le closing commercial.",
             "priorite": 2
         })
     
-    # Recommandations sur l'évolution vs année précédente
-    if donnees.comparaisons.recettes_evolution < -5:
+    # Recommandations sur les évolutions négatives
+    if donnees.comparaisons.recettes_evolution < -10:
         recommandations.append({
             "type": "alerte",
-            "categorie": "Évolution",
-            "titre": "Baisse des recettes vs N-1",
-            "description": f"Recettes en baisse de {abs(donnees.comparaisons.recettes_evolution):.1f}% vs année précédente. Action corrective nécessaire.",
+            "categorie": "Évolution Financière",
+            "titre": "Forte baisse des recettes vs N-1",
+            "description": f"Recettes en baisse de {abs(donnees.comparaisons.recettes_evolution):.1f}% vs année précédente. Plan d'action commercial urgent requis.",
             "priorite": 1
         })
-    elif donnees.comparaisons.recettes_evolution > 5:
+    
+    if donnees.comparaisons.premieres_consultations_evolution < -20:
         recommandations.append({
-            "type": "info",
-            "categorie": "Évolution",
-            "titre": "Croissance des recettes",
-            "description": f"Recettes en hausse de {donnees.comparaisons.recettes_evolution:.1f}% vs année précédente. Excellente performance !",
-            "priorite": 3
+            "type": "alerte",
+            "categorie": "Acquisition Patient",
+            "titre": "Forte chute des consultations",
+            "description": f"Consultations en baisse de {abs(donnees.comparaisons.premieres_consultations_evolution):.1f}% vs N-1. Renforcez urgentement les actions marketing et partenariats.",
+            "priorite": 1
         })
     
-    # Analyse du temps Dr Vergez
-    if donnees.ressources_humaines.jours_dr_vergez < 12:
+    # Analyse de la charge de travail Dr Vergez
+    if donnees.ressources_humaines.jours_dr_vergez < 10:
         recommandations.append({
             "type": "suggestion",
-            "categorie": "Planning",
-            "titre": "Optimiser le temps Dr Vergez",
-            "description": f"Dr Vergez présent seulement {donnees.ressources_humaines.jours_dr_vergez} jours. Évaluez si c'est suffisant pour l'activité.",
+            "categorie": "Organisation RH",
+            "titre": "Optimiser la présence Dr Vergez",
+            "description": f"Dr Vergez présent seulement {donnees.ressources_humaines.jours_dr_vergez} jours ce mois. Évaluez si c'est suffisant pour l'activité et les nouveaux patients.",
             "priorite": 2
         })
     
     return recommandations
 
-# Fonction pour initialiser les données historiques
-async def init_historical_data():
-    """Initialise les données historiques janvier-mai 2025 si elles n'existent pas"""
-    donnees_historiques = [
-        {
-            "id": generate_id(),
-            "mois": "janvier",
-            "annee": 2025,
-            "metriques_activite": {
-                "debuts_traitement": 35,
-                "premieres_consultations": 42,
-                "deposes": 20,
-                "recettes_mois": 166000.0,
-                "rdv_manques": 120,
-                "rdv_presents": 850
-            },
-            "ressources_humaines": {
-                "jours_collaborateur": 18,
-                "jours_dr_vergez": 12
-            },
-            "consultations_cse": {
-                "nombre_cse": 18,
-                "en_traitement_attente_cse": 4,
-                "taux_transformation_cse": 22.0
-            },
-            "diagnostics_enfants": {
-                "nombre_diagnostics_enfants": 20,
-                "en_traitement_attente_enfants": 15,
-                "taux_transformation_enfants": 75.0
-            },
-            "consultations_csa": {
-                "nombre_csa": 15,
-                "en_traitement_attente_csa": 2,
-                "taux_transformation_csa": 13.0
-            },
-            "devis": {
-                "total_devis_acceptes": 140000.0,
-                "nombre_devis_acceptes": 28
-            },
-            "comparaisons": {
-                "debuts_traitement_evolution": 12.0,
-                "consultations_evolution": 5.0,
-                "deposes_evolution": -8.0,
-                "recettes_evolution": 8.0,
-                "rdv_manques_evolution": -5.0,
-                "rdv_presents_evolution": 15.0,
-                "jours_collaborateur_evolution": 0.0,
-                "jours_vergez_evolution": 20.0,
-                "cse_evolution": 10.0,
-                "diagnostics_enfants_evolution": 0.0,
-                "csa_evolution": -20.0,
-                "devis_evolution": 12.0
-            },
-            "date_creation": datetime(2025, 2, 1, 10, 0, 0),
-            "date_modification": datetime(2025, 2, 1, 10, 0, 0)
-        },
-        {
-            "id": generate_id(),
-            "mois": "février",
-            "annee": 2025,
-            "metriques_activite": {
-                "debuts_traitement": 38,
-                "premieres_consultations": 45,
-                "deposes": 25,
-                "recettes_mois": 179000.0,
-                "rdv_manques": 115,
-                "rdv_presents": 880
-            },
-            "ressources_humaines": {
-                "jours_collaborateur": 17,
-                "jours_dr_vergez": 11
-            },
-            "consultations_cse": {
-                "nombre_cse": 22,
-                "en_traitement_attente_cse": 5,
-                "taux_transformation_cse": 23.0
-            },
-            "diagnostics_enfants": {
-                "nombre_diagnostics_enfants": 22,
-                "en_traitement_attente_enfants": 16,
-                "taux_transformation_enfants": 72.0
-            },
-            "consultations_csa": {
-                "nombre_csa": 18,
-                "en_traitement_attente_csa": 3,
-                "taux_transformation_csa": 17.0
-            },
-            "devis": {
-                "total_devis_acceptes": 155000.0,
-                "nombre_devis_acceptes": 31
-            },
-            "comparaisons": {
-                "debuts_traitement_evolution": 18.0,
-                "consultations_evolution": 8.0,
-                "deposes_evolution": -5.0,
-                "recettes_evolution": 12.0,
-                "rdv_manques_evolution": -8.0,
-                "rdv_presents_evolution": 18.0,
-                "jours_collaborateur_evolution": -5.0,
-                "jours_vergez_evolution": 10.0,
-                "cse_evolution": 15.0,
-                "diagnostics_enfants_evolution": 3.0,
-                "csa_evolution": -15.0,
-                "devis_evolution": 18.0
-            },
-            "date_creation": datetime(2025, 3, 1, 10, 0, 0),
-            "date_modification": datetime(2025, 3, 1, 10, 0, 0)
-        },
+# Fonction pour initialiser les données historiques COMPLÈTES
+async def init_historical_complete_data():
+    """Initialise les données historiques complètes mars-mai 2025"""
+    donnees_historiques_completes = [
         {
             "id": generate_id(),
             "mois": "mars",
             "annee": 2025,
             "metriques_activite": {
-                "debuts_traitement": 33,
-                "premieres_consultations": 39,
-                "deposes": 18,
-                "recettes_mois": 154000.0,
-                "rdv_manques": 125,
-                "rdv_presents": 820
+                "debuts_traitement": 48,
+                "cumul_debuts_traitement": 201,
+                "premieres_consultations": 43,
+                "cumul_premieres_consultations": 299,
+                "deposes": 21,
+                "cumul_deposes": 134,
+                "recettes_mois": 176000.0,
+                "cumul_recettes": 969000.0,
+                "rdv_manques": 159,
+                "rdv_presents": 878,
+                "taux_rdv_manques": 18.0
             },
             "ressources_humaines": {
                 "jours_collaborateur": 20,
-                "jours_dr_vergez": 14
+                "jours_dr_vergez": 12
             },
             "consultations_cse": {
-                "nombre_cse": 16,
-                "en_traitement_attente_cse": 2,
-                "taux_transformation_cse": 12.5
+                "nombre_cse": 22,
+                "cumul_cse": 155,
+                "en_traitement_attente_cse": 1,
+                "cumul_traitement_cse": 32,
+                "taux_transformation_cse": 5.0
             },
             "diagnostics_enfants": {
-                "nombre_diagnostics_enfants": 18,
+                "nombre_diagnostics_enfants": 19,
+                "cumul_diag_enfants": 135,
                 "en_traitement_attente_enfants": 14,
-                "taux_transformation_enfants": 76.0
+                "cumul_traitement_diag": 106,
+                "taux_transformation_enfants": 74.0
             },
             "consultations_csa": {
-                "nombre_csa": 20,
-                "en_traitement_attente_csa": 4,
-                "taux_transformation_csa": 20.0
+                "nombre_csa": 21,
+                "cumul_csa": 142,
+                "en_traitement_attente_csa": 0,
+                "cumul_traitement_csa": 4,
+                "taux_transformation_csa": 0.0
             },
             "devis": {
-                "total_devis_acceptes": 130000.0,
-                "nombre_devis_acceptes": 26
+                "total_devis_acceptes": 79000.0,
+                "nombre_devis_acceptes": 18
             },
             "comparaisons": {
-                "debuts_traitement_evolution": -8.0,
-                "consultations_evolution": -12.0,
-                "deposes_evolution": -20.0,
-                "recettes_evolution": -5.0,
-                "rdv_manques_evolution": 8.0,
-                "rdv_presents_evolution": -2.0,
+                "debuts_traitement_evolution": 37.0,
+                "premieres_consultations_evolution": -42.0,
+                "deposes_evolution": -9.0,
+                "recettes_evolution": -10.0,
+                "rdv_manques_evolution": 6.0,
+                "rdv_presents_evolution": -5.0,
                 "jours_collaborateur_evolution": 11.0,
-                "jours_vergez_evolution": 27.0,
-                "cse_evolution": -20.0,
-                "diagnostics_enfants_evolution": -8.0,
-                "csa_evolution": 5.0,
-                "devis_evolution": -8.0
+                "jours_vergez_evolution": -20.0,
+                "cse_evolution": -46.0,
+                "cse_traitement_evolution": -94.0,
+                "diagnostics_enfants_evolution": -49.0,
+                "diagnostics_traitement_evolution": -42.0,
+                "csa_evolution": -36.0,
+                "csa_traitement_evolution": -100.0,
+                "devis_total_evolution": -65.0,
+                "devis_nombre_evolution": -59.0
             },
             "date_creation": datetime(2025, 4, 1, 10, 0, 0),
             "date_modification": datetime(2025, 4, 1, 10, 0, 0)
@@ -377,113 +318,192 @@ async def init_historical_data():
             "mois": "avril",
             "annee": 2025,
             "metriques_activite": {
-                "debuts_traitement": 40,
-                "premieres_consultations": 41,
+                "debuts_traitement": 37,
+                "cumul_debuts_traitement": 238,
+                "premieres_consultations": 35,
+                "cumul_premieres_consultations": 334,
                 "deposes": 23,
-                "recettes_mois": 172000.0,
-                "rdv_manques": 118,
-                "rdv_presents": 895
+                "cumul_deposes": 157,
+                "recettes_mois": 166000.0,
+                "cumul_recettes": 1135000.0,
+                "rdv_manques": 148,
+                "rdv_presents": 880,
+                "taux_rdv_manques": 17.0
             },
             "ressources_humaines": {
                 "jours_collaborateur": 19,
-                "jours_dr_vergez": 12
+                "jours_dr_vergez": 9
             },
             "consultations_cse": {
                 "nombre_cse": 19,
-                "en_traitement_attente_cse": 3,
-                "taux_transformation_cse": 16.0
+                "cumul_cse": 174,
+                "en_traitement_attente_cse": 0,
+                "cumul_traitement_cse": 32,
+                "taux_transformation_cse": 0.0
             },
             "diagnostics_enfants": {
-                "nombre_diagnostics_enfants": 21,
-                "en_traitement_attente_enfants": 16,
-                "taux_transformation_enfants": 78.0
+                "nombre_diagnostics_enfants": 14,
+                "cumul_diag_enfants": 149,
+                "en_traitement_attente_enfants": 5,
+                "cumul_traitement_diag": 111,
+                "taux_transformation_enfants": 36.0
             },
             "consultations_csa": {
                 "nombre_csa": 16,
-                "en_traitement_attente_csa": 1,
-                "taux_transformation_csa": 6.0
+                "cumul_csa": 158,
+                "en_traitement_attente_csa": 0,
+                "cumul_traitement_csa": 4,
+                "taux_transformation_csa": 0.0
             },
             "devis": {
-                "total_devis_acceptes": 145000.0,
-                "nombre_devis_acceptes": 29
+                "total_devis_acceptes": 111000.0,
+                "nombre_devis_acceptes": 20
             },
             "comparaisons": {
-                "debuts_traitement_evolution": 25.0,
-                "consultations_evolution": 2.0,
-                "deposes_evolution": -8.0,
-                "recettes_evolution": 8.0,
-                "rdv_manques_evolution": 2.0,
-                "rdv_presents_evolution": 8.0,
-                "jours_collaborateur_evolution": 5.0,
-                "jours_vergez_evolution": 20.0,
-                "cse_evolution": 18.0,
-                "diagnostics_enfants_evolution": 5.0,
-                "csa_evolution": -30.0,
-                "devis_evolution": 5.0
+                "debuts_traitement_evolution": 23.0,
+                "premieres_consultations_evolution": -46.0,
+                "deposes_evolution": 10.0,
+                "recettes_evolution": 5.0,
+                "rdv_manques_evolution": 11.0,
+                "rdv_presents_evolution": 6.0,
+                "jours_collaborateur_evolution": 6.0,
+                "jours_vergez_evolution": -25.0,
+                "cse_evolution": -41.0,
+                "cse_traitement_evolution": -100.0,
+                "diagnostics_enfants_evolution": -50.0,
+                "diagnostics_traitement_evolution": -75.0,
+                "csa_evolution": -52.0,
+                "csa_traitement_evolution": -100.0,
+                "devis_total_evolution": -33.0,
+                "devis_nombre_evolution": -41.0
             },
             "date_creation": datetime(2025, 5, 1, 10, 0, 0),
             "date_modification": datetime(2025, 5, 1, 10, 0, 0)
+        },
+        {
+            "id": generate_id(),
+            "mois": "mai",
+            "annee": 2025,
+            "metriques_activite": {
+                "debuts_traitement": 41,
+                "cumul_debuts_traitement": 279,
+                "premieres_consultations": 37,
+                "cumul_premieres_consultations": 371,
+                "deposes": 22,
+                "cumul_deposes": 179,
+                "recettes_mois": 167000.0,
+                "cumul_recettes": 1302000.0,
+                "rdv_manques": 131,
+                "rdv_presents": 900,
+                "taux_rdv_manques": 15.0
+            },
+            "ressources_humaines": {
+                "jours_collaborateur": 19,
+                "jours_dr_vergez": 13
+            },
+            "consultations_cse": {
+                "nombre_cse": 20,
+                "cumul_cse": 194,
+                "en_traitement_attente_cse": 3,
+                "cumul_traitement_cse": 35,
+                "taux_transformation_cse": 15.0
+            },
+            "diagnostics_enfants": {
+                "nombre_diagnostics_enfants": 19,
+                "cumul_diag_enfants": 168,
+                "en_traitement_attente_enfants": 15,
+                "cumul_traitement_diag": 126,
+                "taux_transformation_enfants": 79.0
+            },
+            "consultations_csa": {
+                "nombre_csa": 17,
+                "cumul_csa": 175,
+                "en_traitement_attente_csa": 0,
+                "cumul_traitement_csa": 4,
+                "taux_transformation_csa": 0.0
+            },
+            "devis": {
+                "total_devis_acceptes": 120000.0,
+                "nombre_devis_acceptes": 23
+            },
+            "comparaisons": {
+                "debuts_traitement_evolution": 37.0,
+                "premieres_consultations_evolution": -3.0,
+                "deposes_evolution": -12.0,
+                "recettes_evolution": 1.0,
+                "rdv_manques_evolution": 9.0,
+                "rdv_presents_evolution": 12.0,
+                "jours_collaborateur_evolution": 6.0,
+                "jours_vergez_evolution": 30.0,
+                "cse_evolution": 33.0,
+                "cse_traitement_evolution": -50.0,
+                "diagnostics_enfants_evolution": -5.0,
+                "diagnostics_traitement_evolution": 7.0,
+                "csa_evolution": -26.0,
+                "csa_traitement_evolution": -100.0,
+                "devis_total_evolution": -26.0,
+                "devis_nombre_evolution": -26.0
+            },
+            "date_creation": datetime(2025, 6, 1, 10, 0, 0),
+            "date_modification": datetime(2025, 6, 1, 10, 0, 0)
         }
     ]
     
     # Vérifier si les données existent déjà
-    for donnee in donnees_historiques:
-        existing = await db.tableaux_bord_vergez.find_one({
+    for donnee in donnees_historiques_completes:
+        existing = await db.tableaux_bord_complets.find_one({
             "mois": donnee["mois"], 
             "annee": donnee["annee"]
         })
         if not existing:
-            await db.tableaux_bord_vergez.insert_one(donnee)
-            print(f"Données historiques ajoutées pour {donnee['mois']} {donnee['annee']}")
+            await db.tableaux_bord_complets.insert_one(donnee)
+            print(f"Données complètes ajoutées pour {donnee['mois']} {donnee['annee']}")
 
 # API Routes
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "service": "Cabinet Dr Vergez - Tableau de bord"}
+    return {"status": "ok", "service": "Cabinet Dr Vergez - Tableau de bord complet"}
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialise les données historiques au démarrage"""
-    await init_historical_data()
+    """Initialise les données historiques complètes au démarrage"""
+    await init_historical_complete_data()
 
-@app.post("/api/tableau-bord-vergez")
-async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
+@app.post("/api/tableau-bord-complet")
+async def creer_tableau_bord_complet(donnees: TableauBordComplet):
     try:
-        # Vérifier si un tableau existe déjà pour ce mois/année
-        existing = await db.tableaux_bord_vergez.find_one({
+        existing = await db.tableaux_bord_complets.find_one({
             "mois": donnees.mois,
             "annee": donnees.annee
         })
         
         if existing:
-            # Mettre à jour le tableau existant
             donnees.id = existing["id"]
             donnees.date_modification = datetime.utcnow()
             donnees_dict = donnees.dict()
             
-            await db.tableaux_bord_vergez.update_one(
+            await db.tableaux_bord_complets.update_one(
                 {"id": existing["id"]},
                 {"$set": donnees_dict}
             )
         else:
-            # Créer un nouveau tableau
             donnees.id = generate_id()
             donnees.date_creation = datetime.utcnow()
             donnees.date_modification = datetime.utcnow()
             donnees_dict = donnees.dict()
-            await db.tableaux_bord_vergez.insert_one(donnees_dict)
+            await db.tableaux_bord_complets.insert_one(donnees_dict)
         
         # Générer les recommandations
-        donnees_annee_precedente = await db.tableaux_bord_vergez.find_one({
+        donnees_annee_precedente = await db.tableaux_bord_complets.find_one({
             "mois": donnees.mois,
             "annee": donnees.annee - 1
         })
         
         precedentes_donnees = None
         if donnees_annee_precedente:
-            precedentes_donnees = TableauBordVergez(**donnees_annee_precedente)
+            precedentes_donnees = TableauBordComplet(**donnees_annee_precedente)
         
-        recommandations = calculer_recommandations_vergez(donnees, precedentes_donnees)
+        recommandations = calculer_recommandations_completes(donnees, precedentes_donnees)
         
         # Sauvegarder les recommandations
         recommandations_response = []
@@ -491,9 +511,8 @@ async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
             reco_copy = reco.copy()
             reco_copy["id"] = generate_id()
             reco_copy["date_creation"] = datetime.utcnow()
-            await db.recommandations_vergez.insert_one(reco_copy)
+            await db.recommandations_completes.insert_one(reco_copy)
             
-            # For response, use the original recommendation without datetime
             recommandations_response.append({
                 "id": reco_copy["id"],
                 "type": reco["type"],
@@ -513,20 +532,19 @@ async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/tableau-bord-vergez")
-async def lister_tableaux_bord_vergez():
+@app.get("/api/tableau-bord-complet")
+async def lister_tableaux_bord_complets():
     try:
-        tableaux = await db.tableaux_bord_vergez.find({}).sort([("annee", -1), ("date_creation", -1)]).to_list(length=100)
-        # Clean MongoDB ObjectIds
+        tableaux = await db.tableaux_bord_complets.find({}).sort([("annee", -1), ("date_creation", -1)]).to_list(length=100)
         cleaned_tableaux = [clean_mongo_doc(tableau) for tableau in tableaux]
         return {"tableaux": cleaned_tableaux}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/api/tableau-bord-vergez/{tableau_id}")
-async def obtenir_tableau_bord_vergez(tableau_id: str):
+@app.get("/api/tableau-bord-complet/{tableau_id}")
+async def obtenir_tableau_bord_complet(tableau_id: str):
     try:
-        tableau = await db.tableaux_bord_vergez.find_one({"id": tableau_id})
+        tableau = await db.tableaux_bord_complets.find_one({"id": tableau_id})
         if not tableau:
             raise HTTPException(status_code=404, detail="Tableau de bord non trouvé")
         return clean_mongo_doc(tableau)
@@ -535,13 +553,13 @@ async def obtenir_tableau_bord_vergez(tableau_id: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.put("/api/tableau-bord-vergez/{tableau_id}")
-async def modifier_tableau_bord_vergez(tableau_id: str, donnees: TableauBordVergez):
+@app.put("/api/tableau-bord-complet/{tableau_id}")
+async def modifier_tableau_bord_complet(tableau_id: str, donnees: TableauBordComplet):
     try:
         donnees.date_modification = datetime.utcnow()
         donnees_dict = donnees.dict()
         
-        result = await db.tableaux_bord_vergez.update_one(
+        result = await db.tableaux_bord_complets.update_one(
             {"id": tableau_id},
             {"$set": donnees_dict}
         )
@@ -555,62 +573,24 @@ async def modifier_tableau_bord_vergez(tableau_id: str, donnees: TableauBordVerg
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.delete("/api/tableau-bord-vergez/{tableau_id}")
-async def supprimer_tableau_bord_vergez(tableau_id: str):
+@app.get("/api/recommandations-completes")
+async def obtenir_recommandations_completes():
     try:
-        result = await db.tableaux_bord_vergez.delete_one({"id": tableau_id})
-        if result.deleted_count == 0:
-            raise HTTPException(status_code=404, detail="Tableau de bord non trouvé")
-        return {"success": True}
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/api/recommandations-vergez")
-async def obtenir_recommandations_vergez():
-    try:
-        # Obtenir les recommandations récentes (derniers 30 jours)
-        date_limite = datetime.utcnow().replace(day=1)  # Premier jour du mois courant
-        recommandations = await db.recommandations_vergez.find({
+        date_limite = datetime.utcnow().replace(day=1)
+        recommandations = await db.recommandations_completes.find({
             "date_creation": {"$gte": date_limite}
         }).sort("priorite", 1).to_list(length=50)
         
-        # Clean MongoDB ObjectIds
         cleaned_recommandations = [clean_mongo_doc(reco) for reco in recommandations]
         return {"recommandations": cleaned_recommandations}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/api/rectifications-recettes")
-async def creer_rectification(rectification: RectificationRecettes):
+@app.get("/api/statistiques-completes")
+async def obtenir_statistiques_completes():
     try:
-        rectification.id = generate_id()
-        rectification.date_rectification = datetime.utcnow()
+        total_tableaux = await db.tableaux_bord_complets.count_documents({})
         
-        rectification_dict = rectification.dict()
-        result = await db.rectifications_recettes.insert_one(rectification_dict)
-        
-        return {"success": True, "id": rectification.id}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/api/rectifications-recettes")
-async def lister_rectifications():
-    try:
-        rectifications = await db.rectifications_recettes.find({}).sort("date_rectification", -1).to_list(length=50)
-        cleaned_rectifications = [clean_mongo_doc(rect) for rect in rectifications]
-        return {"rectifications": cleaned_rectifications}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.get("/api/statistiques-vergez")
-async def obtenir_statistiques_vergez():
-    try:
-        # Statistiques globales
-        total_tableaux = await db.tableaux_bord_vergez.count_documents({})
-        
-        # Moyennes sur les 6 derniers mois
         pipeline = [
             {"$sort": {"annee": -1, "date_creation": -1}},
             {"$limit": 6},
@@ -620,11 +600,12 @@ async def obtenir_statistiques_vergez():
                 "moyenne_debuts_traitement": {"$avg": "$metriques_activite.debuts_traitement"},
                 "moyenne_consultations": {"$avg": "$metriques_activite.premieres_consultations"},
                 "moyenne_taux_transformation_enfants": {"$avg": "$diagnostics_enfants.taux_transformation_enfants"},
+                "moyenne_taux_transformation_cse": {"$avg": "$consultations_cse.taux_transformation_cse"},
                 "moyenne_rdv_presents": {"$avg": "$metriques_activite.rdv_presents"}
             }}
         ]
         
-        stats = await db.tableaux_bord_vergez.aggregate(pipeline).to_list(length=1)
+        stats = await db.tableaux_bord_complets.aggregate(pipeline).to_list(length=1)
         statistiques = stats[0] if stats else {}
         
         return {

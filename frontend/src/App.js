@@ -8,154 +8,211 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge } from './components/ui/badge';
 import { Alert, AlertDescription } from './components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
-import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X, ChevronLeft, ChevronRight, Calculator } from 'lucide-react';
 
 function App() {
-  // Données historiques complètes (Janvier à Mai 2025)
-  const donneesHistoriques = [
-    {
-      mois: 'janvier',
-      annee: 2025,
-      recettes_mois: 166000,
-      debuts_traitement: 35,
-      premieres_consultations: 42,
-      taux_transformation_enfants: 75,
-      rdv_manques: 120,
-      rdv_presents: 850,
-      taux_transformation_cse: 22.0,
-      nombre_cse: 18,
-      nombre_diagnostics_enfants: 20,
-      jours_dr_vergez: 12,
-      jours_collaborateur: 18,
-      nombre_devis_acceptes: 28,
-      total_devis_acceptes: 140000
-    },
-    {
-      mois: 'février', 
-      annee: 2025,
-      recettes_mois: 179000,
-      debuts_traitement: 38,
-      premieres_consultations: 45,
-      taux_transformation_enfants: 72,
-      rdv_manques: 115,
-      rdv_presents: 880,
-      taux_transformation_cse: 23.0,
-      nombre_cse: 22,
-      nombre_diagnostics_enfants: 22,
-      jours_dr_vergez: 11,
-      jours_collaborateur: 17,
-      nombre_devis_acceptes: 31,
-      total_devis_acceptes: 155000
-    },
+  // Données historiques COMPLÈTES avec TOUS les indicateurs
+  const donneesHistoriquesCompletes = [
     {
       mois: 'mars',
       annee: 2025,
-      recettes_mois: 154000,
-      debuts_traitement: 33,
-      premieres_consultations: 39,
-      taux_transformation_enfants: 76,
-      rdv_manques: 125,
-      rdv_presents: 820,
-      taux_transformation_cse: 12.5,
-      nombre_cse: 16,
-      nombre_diagnostics_enfants: 18,
-      jours_dr_vergez: 14,
-      jours_collaborateur: 20,
-      nombre_devis_acceptes: 26,
-      total_devis_acceptes: 130000
+      metriques_activite: {
+        debuts_traitement: 48,
+        cumul_debuts_traitement: 201,
+        premieres_consultations: 43,
+        cumul_premieres_consultations: 299,
+        deposes: 21,
+        cumul_deposes: 134,
+        recettes_mois: 176000,
+        cumul_recettes: 969000,
+        rdv_manques: 159,
+        rdv_presents: 878,
+        taux_rdv_manques: 18.0
+      },
+      ressources_humaines: {
+        jours_collaborateur: 20,
+        jours_dr_vergez: 12
+      },
+      consultations_cse: {
+        nombre_cse: 22,
+        cumul_cse: 155,
+        en_traitement_attente_cse: 1,
+        cumul_traitement_cse: 32,
+        taux_transformation_cse: 5.0
+      },
+      diagnostics_enfants: {
+        nombre_diagnostics_enfants: 19,
+        cumul_diag_enfants: 135,
+        en_traitement_attente_enfants: 14,
+        cumul_traitement_diag: 106,
+        taux_transformation_enfants: 74.0
+      },
+      consultations_csa: {
+        nombre_csa: 21,
+        cumul_csa: 142,
+        en_traitement_attente_csa: 0,
+        cumul_traitement_csa: 4,
+        taux_transformation_csa: 0.0
+      },
+      devis: {
+        total_devis_acceptes: 79000,
+        nombre_devis_acceptes: 18
+      },
+      comparaisons: {
+        debuts_traitement_evolution: 37.0,
+        premieres_consultations_evolution: -42.0,
+        deposes_evolution: -9.0,
+        recettes_evolution: -10.0,
+        rdv_manques_evolution: 6.0,
+        rdv_presents_evolution: -5.0,
+        jours_collaborateur_evolution: 11.0,
+        jours_vergez_evolution: -20.0,
+        cse_evolution: -46.0,
+        cse_traitement_evolution: -94.0,
+        diagnostics_enfants_evolution: -49.0,
+        diagnostics_traitement_evolution: -42.0,
+        csa_evolution: -36.0,
+        csa_traitement_evolution: -100.0,
+        devis_total_evolution: -65.0,
+        devis_nombre_evolution: -59.0
+      }
     },
     {
       mois: 'avril',
       annee: 2025,
-      recettes_mois: 172000,
-      debuts_traitement: 40,
-      premieres_consultations: 41,
-      taux_transformation_enfants: 78,
-      rdv_manques: 118,
-      rdv_presents: 895,
-      taux_transformation_cse: 16.0,
-      nombre_cse: 19,
-      nombre_diagnostics_enfants: 21,
-      jours_dr_vergez: 12,
-      jours_collaborateur: 19,
-      nombre_devis_acceptes: 29,
-      total_devis_acceptes: 145000
+      metriques_activite: {
+        debuts_traitement: 37,
+        cumul_debuts_traitement: 238,
+        premieres_consultations: 35,
+        cumul_premieres_consultations: 334,
+        deposes: 23,
+        cumul_deposes: 157,
+        recettes_mois: 166000,
+        cumul_recettes: 1135000,
+        rdv_manques: 148,
+        rdv_presents: 880,
+        taux_rdv_manques: 17.0
+      },
+      ressources_humaines: {
+        jours_collaborateur: 19,
+        jours_dr_vergez: 9
+      },
+      consultations_cse: {
+        nombre_cse: 19,
+        cumul_cse: 174,
+        en_traitement_attente_cse: 0,
+        cumul_traitement_cse: 32,
+        taux_transformation_cse: 0.0
+      },
+      diagnostics_enfants: {
+        nombre_diagnostics_enfants: 14,
+        cumul_diag_enfants: 149,
+        en_traitement_attente_enfants: 5,
+        cumul_traitement_diag: 111,
+        taux_transformation_enfants: 36.0
+      },
+      consultations_csa: {
+        nombre_csa: 16,
+        cumul_csa: 158,
+        en_traitement_attente_csa: 0,
+        cumul_traitement_csa: 4,
+        taux_transformation_csa: 0.0
+      },
+      devis: {
+        total_devis_acceptes: 111000,
+        nombre_devis_acceptes: 20
+      },
+      comparaisons: {
+        debuts_traitement_evolution: 23.0,
+        premieres_consultations_evolution: -46.0,
+        deposes_evolution: 10.0,
+        recettes_evolution: 5.0,
+        rdv_manques_evolution: 11.0,
+        rdv_presents_evolution: 6.0,
+        jours_collaborateur_evolution: 6.0,
+        jours_vergez_evolution: -25.0,
+        cse_evolution: -41.0,
+        cse_traitement_evolution: -100.0,
+        diagnostics_enfants_evolution: -50.0,
+        diagnostics_traitement_evolution: -75.0,
+        csa_evolution: -52.0,
+        csa_traitement_evolution: -100.0,
+        devis_total_evolution: -33.0,
+        devis_nombre_evolution: -41.0
+      }
     },
     {
       mois: 'mai',
       annee: 2025,
-      recettes_mois: 167000,
-      debuts_traitement: 41,
-      premieres_consultations: 37,
-      taux_transformation_enfants: 79,
-      rdv_manques: 131,
-      rdv_presents: 900,
-      taux_transformation_cse: 15.0,
-      nombre_cse: 20,
-      nombre_diagnostics_enfants: 19,
-      jours_dr_vergez: 13,
-      jours_collaborateur: 19,
-      nombre_devis_acceptes: 23,
-      total_devis_acceptes: 120000
+      metriques_activite: {
+        debuts_traitement: 41,
+        cumul_debuts_traitement: 279,
+        premieres_consultations: 37,
+        cumul_premieres_consultations: 371,
+        deposes: 22,
+        cumul_deposes: 179,
+        recettes_mois: 167000,
+        cumul_recettes: 1302000,
+        rdv_manques: 131,
+        rdv_presents: 900,
+        taux_rdv_manques: 15.0
+      },
+      ressources_humaines: {
+        jours_collaborateur: 19,
+        jours_dr_vergez: 13
+      },
+      consultations_cse: {
+        nombre_cse: 20,
+        cumul_cse: 194,
+        en_traitement_attente_cse: 3,
+        cumul_traitement_cse: 35,
+        taux_transformation_cse: 15.0
+      },
+      diagnostics_enfants: {
+        nombre_diagnostics_enfants: 19,
+        cumul_diag_enfants: 168,
+        en_traitement_attente_enfants: 15,
+        cumul_traitement_diag: 126,
+        taux_transformation_enfants: 79.0
+      },
+      consultations_csa: {
+        nombre_csa: 17,
+        cumul_csa: 175,
+        en_traitement_attente_csa: 0,
+        cumul_traitement_csa: 4,
+        taux_transformation_csa: 0.0
+      },
+      devis: {
+        total_devis_acceptes: 120000,
+        nombre_devis_acceptes: 23
+      },
+      comparaisons: {
+        debuts_traitement_evolution: 37.0,
+        premieres_consultations_evolution: -3.0,
+        deposes_evolution: -12.0,
+        recettes_evolution: 1.0,
+        rdv_manques_evolution: 9.0,
+        rdv_presents_evolution: 12.0,
+        jours_collaborateur_evolution: 6.0,
+        jours_vergez_evolution: 30.0,
+        cse_evolution: 33.0,
+        cse_traitement_evolution: -50.0,
+        diagnostics_enfants_evolution: -5.0,
+        diagnostics_traitement_evolution: 7.0,
+        csa_evolution: -26.0,
+        csa_traitement_evolution: -100.0,
+        devis_total_evolution: -26.0,
+        devis_nombre_evolution: -26.0
+      }
     }
   ];
 
   const [selectedMonth, setSelectedMonth] = useState('mai');
   const [selectedYear, setSelectedYear] = useState(2025);
-  
-  const [currentData, setCurrentData] = useState({
-    mois: 'mai',
-    annee: 2025,
-    metriques_activite: {
-      debuts_traitement: 41,
-      premieres_consultations: 37,
-      deposes: 22,
-      recettes_mois: 167000,
-      rdv_manques: 131,
-      rdv_presents: 900
-    },
-    ressources_humaines: {
-      jours_collaborateur: 19,
-      jours_dr_vergez: 13
-    },
-    consultations_cse: {
-      nombre_cse: 20,
-      en_traitement_attente_cse: 3,
-      taux_transformation_cse: 15.0
-    },
-    diagnostics_enfants: {
-      nombre_diagnostics_enfants: 19,
-      en_traitement_attente_enfants: 15,
-      taux_transformation_enfants: 79.0
-    },
-    consultations_csa: {
-      nombre_csa: 17,
-      en_traitement_attente_csa: 0,
-      taux_transformation_csa: 0.0
-    },
-    devis: {
-      total_devis_acceptes: 120000,
-      nombre_devis_acceptes: 23
-    },
-    comparaisons: {
-      debuts_traitement_evolution: 37.0,
-      consultations_evolution: -3.0,
-      deposes_evolution: -12.0,
-      recettes_evolution: 1.0,
-      rdv_manques_evolution: 9.0,
-      rdv_presents_evolution: 12.0,
-      jours_collaborateur_evolution: 6.0,
-      jours_vergez_evolution: 30.0,
-      cse_evolution: 33.0,
-      diagnostics_enfants_evolution: -5.0,
-      csa_evolution: -26.0,
-      devis_evolution: -26.0
-    }
-  });
+  const [currentData, setCurrentData] = useState(donneesHistoriquesCompletes[2]); // Mai par défaut
 
   const [tableaux, setTableaux] = useState([]);
   const [recommandations, setRecommandations] = useState([]);
-  const [rectifications, setRectifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -174,76 +231,25 @@ function App() {
   useEffect(() => {
     chargerTableaux();
     chargerRecommandations();
-    chargerRectifications();
   }, []);
 
   useEffect(() => {
-    // Charger les données du mois sélectionné
     loadSelectedMonthData();
   }, [selectedMonth, selectedYear]);
 
   const loadSelectedMonthData = () => {
-    // Chercher dans les données historiques
-    const donneesMois = donneesHistoriques.find(
+    const donneesMois = donneesHistoriquesCompletes.find(
       d => d.mois === selectedMonth && d.annee === selectedYear
     );
 
     if (donneesMois) {
-      setCurrentData({
-        mois: donneesMois.mois,
-        annee: donneesMois.annee,
-        metriques_activite: {
-          debuts_traitement: donneesMois.debuts_traitement,
-          premieres_consultations: donneesMois.premieres_consultations,
-          deposes: 22, // Valeur par défaut
-          recettes_mois: donneesMois.recettes_mois,
-          rdv_manques: donneesMois.rdv_manques,
-          rdv_presents: donneesMois.rdv_presents
-        },
-        ressources_humaines: {
-          jours_collaborateur: donneesMois.jours_collaborateur,
-          jours_dr_vergez: donneesMois.jours_dr_vergez
-        },
-        consultations_cse: {
-          nombre_cse: donneesMois.nombre_cse,
-          en_traitement_attente_cse: 3, // Valeur par défaut
-          taux_transformation_cse: donneesMois.taux_transformation_cse
-        },
-        diagnostics_enfants: {
-          nombre_diagnostics_enfants: donneesMois.nombre_diagnostics_enfants,
-          en_traitement_attente_enfants: 15, // Valeur par défaut
-          taux_transformation_enfants: donneesMois.taux_transformation_enfants
-        },
-        consultations_csa: {
-          nombre_csa: 17, // Valeur par défaut
-          en_traitement_attente_csa: 0,
-          taux_transformation_csa: 0.0
-        },
-        devis: {
-          total_devis_acceptes: donneesMois.total_devis_acceptes,
-          nombre_devis_acceptes: donneesMois.nombre_devis_acceptes
-        },
-        comparaisons: {
-          debuts_traitement_evolution: Math.random() * 50 - 25, // Simulation
-          consultations_evolution: Math.random() * 30 - 15,
-          deposes_evolution: Math.random() * 20 - 10,
-          recettes_evolution: Math.random() * 25 - 12.5,
-          rdv_manques_evolution: Math.random() * 20 - 10,
-          rdv_presents_evolution: Math.random() * 25 - 12.5,
-          jours_collaborateur_evolution: Math.random() * 15 - 7.5,
-          jours_vergez_evolution: Math.random() * 40 - 20,
-          cse_evolution: Math.random() * 50 - 25,
-          diagnostics_enfants_evolution: Math.random() * 20 - 10,
-          csa_evolution: Math.random() * 40 - 20,
-          devis_evolution: Math.random() * 30 - 15
-        }
-      });
+      setCurrentData(donneesMois);
     }
   };
 
   const chargerTableaux = async () => {
     try {
-      const response = await fetch(`${backendUrl}/api/tableau-bord-vergez`);
+      const response = await fetch(`${backendUrl}/api/tableau-bord-complet`);
       const data = await response.json();
       setTableaux(data.tableaux || []);
     } catch (error) {
@@ -253,7 +259,7 @@ function App() {
 
   const chargerRecommandations = async () => {
     try {
-      const response = await fetch(`${backendUrl}/api/recommandations-vergez`);
+      const response = await fetch(`${backendUrl}/api/recommandations-completes`);
       const data = await response.json();
       setRecommandations(data.recommandations || []);
     } catch (error) {
@@ -261,23 +267,25 @@ function App() {
     }
   };
 
-  const chargerRectifications = async () => {
-    try {
-      const response = await fetch(`${backendUrl}/api/rectifications-recettes`);
-      const data = await response.json();
-      setRectifications(data.rectifications || []);
-    } catch (error) {
-      console.error('Erreur chargement rectifications:', error);
-    }
-  };
-
   const sauvegarderDonnees = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/tableau-bord-vergez`, {
+      const dataToSend = {
+        mois: currentData.mois,
+        annee: currentData.annee,
+        metriques_activite: currentData.metriques_activite,
+        ressources_humaines: currentData.ressources_humaines,
+        consultations_cse: currentData.consultations_cse,
+        diagnostics_enfants: currentData.diagnostics_enfants,
+        consultations_csa: currentData.consultations_csa,
+        devis: currentData.devis,
+        comparaisons: currentData.comparaisons
+      };
+
+      const response = await fetch(`${backendUrl}/api/tableau-bord-complet`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(currentData)
+        body: JSON.stringify(dataToSend)
       });
       
       const result = await response.json();
@@ -292,70 +300,6 @@ function App() {
       setMessage('Erreur lors de la sauvegarde: ' + error.message);
     }
     setLoading(false);
-  };
-
-  const startEdit = (tableau) => {
-    setEditingId(tableau.id);
-    setEditData({
-      debuts_traitement: tableau.metriques_activite.debuts_traitement,
-      premieres_consultations: tableau.metriques_activite.premieres_consultations,
-      recettes_mois: tableau.metriques_activite.recettes_mois,
-      taux_transformation_enfants: tableau.diagnostics_enfants.taux_transformation_enfants
-    });
-  };
-
-  const cancelEdit = () => {
-    setEditingId(null);
-    setEditData({});
-  };
-
-  const saveEdit = async (tableauId) => {
-    setLoading(true);
-    try {
-      const tableau = tableaux.find(t => t.id === tableauId);
-      if (!tableau) return;
-
-      const updatedData = {
-        ...tableau,
-        metriques_activite: {
-          ...tableau.metriques_activite,
-          debuts_traitement: parseInt(editData.debuts_traitement) || 0,
-          premieres_consultations: parseInt(editData.premieres_consultations) || 0,
-          recettes_mois: parseFloat(editData.recettes_mois) || 0
-        },
-        diagnostics_enfants: {
-          ...tableau.diagnostics_enfants,
-          taux_transformation_enfants: parseFloat(editData.taux_transformation_enfants) || 0
-        }
-      };
-
-      const response = await fetch(`${backendUrl}/api/tableau-bord-vergez/${tableauId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData)
-      });
-
-      const result = await response.json();
-      if (result.success) {
-        setMessage('Données modifiées avec succès !');
-        await chargerTableaux();
-        setEditingId(null);
-        setEditData({});
-      }
-    } catch (error) {
-      setMessage('Erreur lors de la modification: ' + error.message);
-    }
-    setLoading(false);
-  };
-
-  const updateNestedData = (section, field, value) => {
-    setCurrentData(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: typeof value === 'string' ? parseFloat(value) || 0 : value
-      }
-    }));
   };
 
   const navigateMonth = (direction) => {
@@ -373,6 +317,16 @@ function App() {
 
     setSelectedMonth(moisOptions[newIndex]);
     setSelectedYear(newYear);
+  };
+
+  const updateNestedData = (section, field, value) => {
+    setCurrentData(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: typeof value === 'string' ? parseFloat(value) || 0 : value
+      }
+    }));
   };
 
   const getEvolutionIcon = (evolution) => {
@@ -405,41 +359,22 @@ function App() {
     }
   };
 
-  const calculerTauxRdvManques = () => {
-    const total = currentData.metriques_activite.rdv_manques + currentData.metriques_activite.rdv_presents;
-    return total > 0 ? (currentData.metriques_activite.rdv_manques / total * 100).toFixed(1) : 0;
-  };
-
-  const calculerMoyenneRecettes = () => {
-    const total = donneesHistoriques.reduce((sum, mois) => sum + mois.recettes_mois, 0);
-    return Math.round(total / donneesHistoriques.length);
-  };
-
-  const calculerCroissanceRecettes = () => {
-    if (donneesHistoriques.length < 2) return 0;
-    const dernierMois = donneesHistoriques[donneesHistoriques.length - 1];
-    const premierMois = donneesHistoriques[0];
-    return (((dernierMois.recettes_mois - premierMois.recettes_mois) / premierMois.recettes_mois) * 100).toFixed(1);
-  };
-
-  // Composant graphique simple pour les données historiques
   const SimpleChart = ({ data, dataKey, title, color = "#3b82f6" }) => {
-    const maxValue = Math.max(...data.map(d => d[dataKey]));
-    const minValue = Math.min(...data.map(d => d[dataKey]));
+    const maxValue = Math.max(...data.map(d => d.metriques_activite?.[dataKey] || d[dataKey] || 0));
+    const minValue = Math.min(...data.map(d => d.metriques_activite?.[dataKey] || d[dataKey] || 0));
     
     return (
       <div className="chart-container">
         <h4 className="text-sm font-semibold text-gray-700 mb-3">{title}</h4>
         <div className="flex items-end justify-between h-20 gap-2">
           {data.map((item, index) => {
-            const height = ((item[dataKey] - minValue) / (maxValue - minValue)) * 100;
+            const value = item.metriques_activite?.[dataKey] || item[dataKey] || 0;
+            const height = maxValue > minValue ? ((value - minValue) / (maxValue - minValue)) * 100 : 50;
+            
             return (
               <div key={index} className="flex flex-col items-center flex-1">
                 <div className="text-xs font-medium mb-1" style={{color}}>
-                  {typeof item[dataKey] === 'number' && dataKey === 'recettes_mois' 
-                    ? `${Math.round(item[dataKey] / 1000)}K` 
-                    : item[dataKey]
-                  }
+                  {dataKey === 'recettes_mois' ? `${Math.round(value / 1000)}K` : value}
                 </div>
                 <div 
                   className="w-full rounded-t transition-all duration-500"
@@ -462,7 +397,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-      {/* Header moderne style PowerBI avec logo */}
+      {/* Header avec logo et sélecteur */}
       <div 
         className="relative overflow-hidden bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-900"
         style={{
@@ -476,7 +411,6 @@ function App() {
         <div className="relative container mx-auto p-6">
           <div className="flex items-center justify-between text-white">
             <div className="flex items-center space-x-6">
-              {/* Logo du cabinet */}
               <div className="flex-shrink-0">
                 <img
                   src="https://customer-assets.emergentagent.com/job_vergez-tracker/artifacts/321ccg02_Logo%20Cabinet%20FV.png"
@@ -491,12 +425,12 @@ function App() {
                 <p className="text-blue-100 text-lg">Tableau de bord orthodontique • Analytics & Performance</p>
                 <div className="flex items-center mt-4 space-x-6">
                   <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
-                    <BarChart3 className="w-5 h-5 mr-2" />
-                    <span className="text-sm">Moyenne mensuelle: {calculerMoyenneRecettes().toLocaleString('fr-FR')}€</span>
+                    <Calculator className="w-5 h-5 mr-2" />
+                    <span className="text-sm">Cumul recettes: {currentData.metriques_activite.cumul_recettes?.toLocaleString('fr-FR')}€</span>
                   </div>
                   <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                     <TrendingUp className="w-5 h-5 mr-2" />
-                    <span className="text-sm">Croissance: +{calculerCroissanceRecettes()}%</span>
+                    <span className="text-sm">Cumul débuts: {currentData.metriques_activite.cumul_debuts_traitement}</span>
                   </div>
                 </div>
               </div>
@@ -529,7 +463,6 @@ function App() {
                 </Button>
               </div>
               
-              {/* Sélecteurs directs */}
               <div className="flex items-center space-x-2">
                 <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                   <SelectTrigger className="w-32 bg-white/10 border-white/20 text-white">
@@ -595,179 +528,285 @@ function App() {
           </TabsList>
 
           <TabsContent value="dashboard">
-            {/* KPIs principaux style PowerBI */}
+            {/* KPIs principaux avec TOUTES les données */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              {/* Recettes avec cumul */}
               <div className="powerbi-card bg-gradient-to-br from-blue-500 to-blue-600">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-2">
                   <Euro className="w-8 h-8 text-white opacity-80" />
                   <div className="text-right">
-                    <div className="text-white/80 text-sm">Recettes du mois</div>
-                    <div className="text-3xl font-bold text-white">
+                    <div className="text-white/80 text-xs">Recettes du mois</div>
+                    <div className="text-2xl font-bold text-white">
                       {Math.round(currentData.metriques_activite.recettes_mois / 1000)}K€
                     </div>
+                    <div className="text-white/70 text-xs">
+                      Cumul: {Math.round(currentData.metriques_activite.cumul_recettes / 1000)}K€
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className={`flex items-center px-3 py-1 rounded-full ${getEvolutionColor(currentData.comparaisons.recettes_evolution)} bg-white/20`}>
+                <div className="flex items-center">
+                  <div className={`flex items-center px-2 py-1 rounded-full bg-white/20 text-xs`}>
                     {getEvolutionIcon(currentData.comparaisons.recettes_evolution)}
-                    <span className="ml-1 text-white text-sm">
-                      {currentData.comparaisons.recettes_evolution > 0 ? '+' : ''}{currentData.comparaisons.recettes_evolution.toFixed(1)}%
+                    <span className="ml-1 text-white">
+                      {currentData.comparaisons.recettes_evolution > 0 ? '+' : ''}{currentData.comparaisons.recettes_evolution}% vs N-1
                     </span>
                   </div>
                 </div>
               </div>
 
+              {/* Débuts de traitement avec cumul */}
               <div className="powerbi-card bg-gradient-to-br from-green-500 to-green-600">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-2">
                   <Activity className="w-8 h-8 text-white opacity-80" />
                   <div className="text-right">
-                    <div className="text-white/80 text-sm">Débuts traitement</div>
-                    <div className="text-3xl font-bold text-white">
+                    <div className="text-white/80 text-xs">Débuts traitement</div>
+                    <div className="text-2xl font-bold text-white">
                       {currentData.metriques_activite.debuts_traitement}
                     </div>
+                    <div className="text-white/70 text-xs">
+                      Cumul: {currentData.metriques_activite.cumul_debuts_traitement}
+                    </div>
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <div className={`flex items-center px-3 py-1 rounded-full bg-white/20`}>
+                  <div className="flex items-center px-2 py-1 rounded-full bg-white/20 text-xs">
                     {getEvolutionIcon(currentData.comparaisons.debuts_traitement_evolution)}
-                    <span className="ml-1 text-white text-sm">
-                      {currentData.comparaisons.debuts_traitement_evolution > 0 ? '+' : ''}{currentData.comparaisons.debuts_traitement_evolution.toFixed(1)}%
+                    <span className="ml-1 text-white">
+                      +{currentData.comparaisons.debuts_traitement_evolution}% vs N-1
                     </span>
                   </div>
                 </div>
               </div>
 
+              {/* Consultations avec cumul */}
               <div className="powerbi-card bg-gradient-to-br from-purple-500 to-purple-600">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-2">
                   <Users className="w-8 h-8 text-white opacity-80" />
                   <div className="text-right">
-                    <div className="text-white/80 text-sm">Consultations</div>
-                    <div className="text-3xl font-bold text-white">
+                    <div className="text-white/80 text-xs">Consultations</div>
+                    <div className="text-2xl font-bold text-white">
                       {currentData.metriques_activite.premieres_consultations}
+                    </div>
+                    <div className="text-white/70 text-xs">
+                      Cumul: {currentData.metriques_activite.cumul_premieres_consultations}
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <div className="flex items-center px-3 py-1 rounded-full bg-white/20">
-                    {getEvolutionIcon(currentData.comparaisons.consultations_evolution)}
-                    <span className="ml-1 text-white text-sm">
-                      {currentData.comparaisons.consultations_evolution > 0 ? '+' : ''}{currentData.comparaisons.consultations_evolution.toFixed(1)}%
+                  <div className="flex items-center px-2 py-1 rounded-full bg-white/20 text-xs">
+                    {getEvolutionIcon(currentData.comparaisons.premieres_consultations_evolution)}
+                    <span className="ml-1 text-white">
+                      {currentData.comparaisons.premieres_consultations_evolution}% vs N-1
                     </span>
                   </div>
                 </div>
               </div>
 
+              {/* RDV Manqués avec taux */}
               <div className="powerbi-card bg-gradient-to-br from-orange-500 to-orange-600">
-                <div className="flex items-center justify-between mb-4">
-                  <Target className="w-8 h-8 text-white opacity-80" />
+                <div className="flex items-center justify-between mb-2">
+                  <Clock className="w-8 h-8 text-white opacity-80" />
                   <div className="text-right">
-                    <div className="text-white/80 text-sm">Transf. Enfants</div>
-                    <div className="text-3xl font-bold text-white">
-                      {currentData.diagnostics_enfants.taux_transformation_enfants}%
+                    <div className="text-white/80 text-xs">RDV Manqués</div>
+                    <div className="text-2xl font-bold text-white">
+                      {currentData.metriques_activite.rdv_manques}
+                    </div>
+                    <div className="text-white/70 text-xs">
+                      Taux: {currentData.metriques_activite.taux_rdv_manques}%
                     </div>
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <div className="flex items-center px-3 py-1 rounded-full bg-white/20">
-                    <CheckCircle className="w-4 h-4 text-white" />
-                    <span className="ml-1 text-white text-sm">Excellent</span>
+                  <div className="flex items-center px-2 py-1 rounded-full bg-white/20 text-xs">
+                    {getEvolutionIcon(currentData.comparaisons.rdv_manques_evolution)}
+                    <span className="ml-1 text-white">
+                      {currentData.comparaisons.rdv_manques_evolution > 0 ? '+' : ''}{currentData.comparaisons.rdv_manques_evolution}% vs N-1
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Sections détaillées style PowerBI */}
+            {/* Sections détaillées COMPLÈTES */}
             <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-              {/* CSE Performance */}
+              {/* Performance CSE COMPLÈTE */}
               <div className="powerbi-section">
                 <div className="powerbi-section-header">
-                  <h3 className="text-lg font-bold text-white">Performance CSE</h3>
+                  <h3 className="text-lg font-bold text-white">Performance CSE Complète</h3>
                   <div className="flex items-center">
                     <div className={`w-3 h-3 rounded-full ${currentData.consultations_cse.taux_transformation_cse < 20 ? 'bg-red-400' : 'bg-green-400'}`}></div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Consultations CSE</span>
-                    <span className="font-bold text-white text-xl">{currentData.consultations_cse.nombre_cse}</span>
+                    <span className="text-slate-300 text-sm">Nombre CSE:</span>
+                    <span className="font-bold text-white">{currentData.consultations_cse.nombre_cse}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">En traitement</span>
+                    <span className="text-slate-300 text-sm">Cumul CSE:</span>
+                    <span className="font-bold text-blue-400">{currentData.consultations_cse.cumul_cse}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300 text-sm">En traitement:</span>
                     <span className="font-bold text-white">{currentData.consultations_cse.en_traitement_attente_cse}</span>
                   </div>
-                  <div className="mt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300 text-sm">Cumul traitement:</span>
+                    <span className="font-bold text-blue-400">{currentData.consultations_cse.cumul_traitement_cse}</span>
+                  </div>
+                  <div className="mt-3">
                     <div className="flex justify-between mb-2">
-                      <span className="text-slate-300">Taux transformation</span>
+                      <span className="text-slate-300 text-sm">Taux transformation:</span>
                       <span className={`font-bold ${currentData.consultations_cse.taux_transformation_cse < 20 ? 'text-red-400' : 'text-green-400'}`}>
                         {currentData.consultations_cse.taux_transformation_cse}%
                       </span>
                     </div>
-                    <div className="w-full bg-slate-700 rounded-full h-3">
+                    <div className="w-full bg-slate-700 rounded-full h-2">
                       <div 
-                        className={`h-3 rounded-full transition-all duration-700 ${currentData.consultations_cse.taux_transformation_cse < 20 ? 'bg-red-400' : 'bg-green-400'}`}
-                        style={{ width: `${currentData.consultations_cse.taux_transformation_cse}%` }}
+                        className={`h-2 rounded-full transition-all duration-700 ${currentData.consultations_cse.taux_transformation_cse < 20 ? 'bg-red-400' : 'bg-green-400'}`}
+                        style={{ width: `${Math.min(currentData.consultations_cse.taux_transformation_cse, 100)}%` }}
                       ></div>
+                    </div>
+                    <div className="flex justify-between mt-1 text-xs">
+                      <span className="text-slate-400">Évolution: {currentData.comparaisons.cse_evolution > 0 ? '+' : ''}{currentData.comparaisons.cse_evolution}%</span>
+                      <span className="text-slate-400">Trait.: {currentData.comparaisons.cse_traitement_evolution}%</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Diagnostics Enfants */}
+              {/* Diagnostics Enfants COMPLET */}
               <div className="powerbi-section">
                 <div className="powerbi-section-header">
-                  <h3 className="text-lg font-bold text-white">Pédodontie</h3>
+                  <h3 className="text-lg font-bold text-white">Pédodontie Complète</h3>
                   <div className="flex items-center">
                     <div className="w-3 h-3 rounded-full bg-green-400"></div>
                   </div>
                 </div>
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Diagnostics</span>
-                    <span className="font-bold text-white text-xl">{currentData.diagnostics_enfants.nombre_diagnostics_enfants}</span>
+                    <span className="text-slate-300 text-sm">Diagnostics:</span>
+                    <span className="font-bold text-white">{currentData.diagnostics_enfants.nombre_diagnostics_enfants}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">En traitement</span>
+                    <span className="text-slate-300 text-sm">Cumul diagnostics:</span>
+                    <span className="font-bold text-green-400">{currentData.diagnostics_enfants.cumul_diag_enfants}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300 text-sm">En traitement:</span>
                     <span className="font-bold text-white">{currentData.diagnostics_enfants.en_traitement_attente_enfants}</span>
                   </div>
-                  <div className="mt-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300 text-sm">Cumul traitement:</span>
+                    <span className="font-bold text-green-400">{currentData.diagnostics_enfants.cumul_traitement_diag}</span>
+                  </div>
+                  <div className="mt-3">
                     <div className="flex justify-between mb-2">
-                      <span className="text-slate-300">Taux transformation</span>
+                      <span className="text-slate-300 text-sm">Taux transformation:</span>
                       <span className="font-bold text-green-400">{currentData.diagnostics_enfants.taux_transformation_enfants}%</span>
                     </div>
-                    <div className="w-full bg-slate-700 rounded-full h-3">
+                    <div className="w-full bg-slate-700 rounded-full h-2">
                       <div 
-                        className="bg-green-400 h-3 rounded-full transition-all duration-700"
-                        style={{ width: `${currentData.diagnostics_enfants.taux_transformation_enfants}%` }}
+                        className="bg-green-400 h-2 rounded-full transition-all duration-700"
+                        style={{ width: `${Math.min(currentData.diagnostics_enfants.taux_transformation_enfants, 100)}%` }}
                       ></div>
+                    </div>
+                    <div className="flex justify-between mt-1 text-xs">
+                      <span className="text-slate-400">Évolution: {currentData.comparaisons.diagnostics_enfants_evolution}%</span>
+                      <span className="text-slate-400">Trait.: {currentData.comparaisons.diagnostics_traitement_evolution > 0 ? '+' : ''}{currentData.comparaisons.diagnostics_traitement_evolution}%</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Ressources & Devis */}
+              {/* CSA COMPLET + Devis */}
               <div className="powerbi-section">
                 <div className="powerbi-section-header">
-                  <h3 className="text-lg font-bold text-white">Ressources & Devis</h3>
+                  <h3 className="text-lg font-bold text-white">CSA & Devis</h3>
                   <div className="flex items-center">
-                    <div className="w-3 h-3 rounded-full bg-blue-400"></div>
+                    <div className="w-3 h-3 rounded-full bg-orange-400"></div>
                   </div>
+                </div>
+                <div className="space-y-3">
+                  <div className="pb-2 border-b border-slate-600">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-slate-300 text-sm">CSA ce mois:</span>
+                      <span className="font-bold text-white">{currentData.consultations_csa.nombre_csa}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">Cumul CSA:</span>
+                      <span className="font-bold text-orange-400">{currentData.consultations_csa.cumul_csa}</span>
+                    </div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      Transformation: {currentData.consultations_csa.taux_transformation_csa}% ({currentData.comparaisons.csa_evolution}% évol.)
+                    </div>
+                  </div>
+                  <div className="pt-2">
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="text-slate-300 text-sm">Devis acceptés:</span>
+                      <span className="font-bold text-white">{currentData.devis.nombre_devis_acceptes}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-slate-300 text-sm">Total devis:</span>
+                      <span className="font-bold text-emerald-400">{Math.round(currentData.devis.total_devis_acceptes / 1000)}K€</span>
+                    </div>
+                    <div className="text-xs text-slate-400 mt-1">
+                      Évolution: {currentData.comparaisons.devis_nombre_evolution}% (nombre), {currentData.comparaisons.devis_total_evolution}% (montant)
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section Ressources Humaines + Déposes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="powerbi-section">
+                <div className="powerbi-section-header">
+                  <h3 className="text-lg font-bold text-white">Ressources Humaines</h3>
                 </div>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Dr Vergez</span>
-                    <span className="font-bold text-white">{currentData.ressources_humaines.jours_dr_vergez} jours</span>
+                    <span className="text-slate-300">Dr Vergez:</span>
+                    <div className="flex items-center">
+                      <span className="font-bold text-white mr-2">{currentData.ressources_humaines.jours_dr_vergez} jours</span>
+                      <div className={`flex items-center text-xs px-2 py-1 rounded ${getEvolutionColor(currentData.comparaisons.jours_vergez_evolution)}`}>
+                        {getEvolutionIcon(currentData.comparaisons.jours_vergez_evolution)}
+                        <span className="ml-1">{currentData.comparaisons.jours_vergez_evolution > 0 ? '+' : ''}{currentData.comparaisons.jours_vergez_evolution}%</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Collaborateur</span>
-                    <span className="font-bold text-white">{currentData.ressources_humaines.jours_collaborateur} jours</span>
+                    <span className="text-slate-300">Collaborateur:</span>
+                    <div className="flex items-center">
+                      <span className="font-bold text-white mr-2">{currentData.ressources_humaines.jours_collaborateur} jours</span>
+                      <div className={`flex items-center text-xs px-2 py-1 rounded ${getEvolutionColor(currentData.comparaisons.jours_collaborateur_evolution)}`}>
+                        {getEvolutionIcon(currentData.comparaisons.jours_collaborateur_evolution)}
+                        <span className="ml-1">{currentData.comparaisons.jours_collaborateur_evolution > 0 ? '+' : ''}{currentData.comparaisons.jours_collaborateur_evolution}%</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center border-t border-slate-600 pt-3">
-                    <span className="text-slate-300">Devis acceptés</span>
-                    <span className="font-bold text-white">{currentData.devis.nombre_devis_acceptes}</span>
+                </div>
+              </div>
+
+              <div className="powerbi-section">
+                <div className="powerbi-section-header">
+                  <h3 className="text-lg font-bold text-white">Déposes & RDV</h3>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">Déposes ce mois:</span>
+                    <span className="font-bold text-white">{currentData.metriques_activite.deposes}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-slate-300">Total devis</span>
-                    <span className="font-bold text-blue-400">{Math.round(currentData.devis.total_devis_acceptes / 1000)}K€</span>
+                    <span className="text-slate-300">Cumul déposes:</span>
+                    <span className="font-bold text-yellow-400">{currentData.metriques_activite.cumul_deposes}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-300">RDV présents:</span>
+                    <span className="font-bold text-green-400">{currentData.metriques_activite.rdv_presents}</span>
+                  </div>
+                  <div className="text-xs text-slate-400">
+                    Évolution déposes: {currentData.comparaisons.deposes_evolution}% | RDV: {currentData.comparaisons.rdv_presents_evolution > 0 ? '+' : ''}{currentData.comparaisons.rdv_presents_evolution}%
                   </div>
                 </div>
               </div>
@@ -776,28 +815,27 @@ function App() {
 
           <TabsContent value="analytics">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              {/* Graphiques des tendances */}
               <div className="powerbi-section p-6">
                 <SimpleChart 
-                  data={donneesHistoriques} 
+                  data={donneesHistoriquesCompletes} 
                   dataKey="recettes_mois" 
-                  title="Évolution des Recettes (Jan-Mai 2025)"
+                  title="Recettes Mensuelles (Mars-Mai 2025)"
                   color="#3b82f6"
                 />
               </div>
 
               <div className="powerbi-section p-6">
                 <SimpleChart 
-                  data={donneesHistoriques} 
+                  data={donneesHistoriquesCompletes} 
                   dataKey="debuts_traitement" 
-                  title="Débuts de Traitement par Mois"
+                  title="Débuts de Traitement"
                   color="#10b981"
                 />
               </div>
 
               <div className="powerbi-section p-6">
                 <SimpleChart 
-                  data={donneesHistoriques} 
+                  data={donneesHistoriquesCompletes} 
                   dataKey="premieres_consultations" 
                   title="Premières Consultations"
                   color="#8b5cf6"
@@ -806,7 +844,7 @@ function App() {
 
               <div className="powerbi-section p-6">
                 <SimpleChart 
-                  data={donneesHistoriques} 
+                  data={donneesHistoriquesCompletes.map(d => ({ ...d, taux_transformation_enfants: d.diagnostics_enfants.taux_transformation_enfants }))}
                   dataKey="taux_transformation_enfants" 
                   title="Taux Transformation Enfants (%)"
                   color="#f59e0b"
@@ -814,46 +852,64 @@ function App() {
               </div>
             </div>
 
-            {/* Tableau de performance mensuelle */}
+            {/* Tableau détaillé COMPLET */}
             <div className="powerbi-section">
               <div className="powerbi-section-header">
-                <h3 className="text-xl font-bold text-white">Performance Mensuelle 2025</h3>
+                <h3 className="text-xl font-bold text-white">Tableau Complet Mars-Mai 2025</h3>
               </div>
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-slate-600">
-                      <th className="text-left py-3 px-4 font-semibold text-slate-300">Mois</th>
-                      <th className="text-left py-3 px-4 font-semibold text-slate-300">Recettes</th>
-                      <th className="text-left py-3 px-4 font-semibold text-slate-300">Débuts</th>
-                      <th className="text-left py-3 px-4 font-semibold text-slate-300">Consultations</th>
-                      <th className="text-left py-3 px-4 font-semibold text-slate-300">Transf. Enfants</th>
-                      <th className="text-left py-3 px-4 font-semibold text-slate-300">RDV Manqués</th>
+                      <th className="text-left py-3 px-2 font-semibold text-slate-300">Indicateur</th>
+                      <th className="text-left py-3 px-2 font-semibold text-slate-300">Mars</th>
+                      <th className="text-left py-3 px-2 font-semibold text-slate-300">Avril</th>
+                      <th className="text-left py-3 px-2 font-semibold text-slate-300">Mai</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {donneesHistoriques.map((mois, index) => (
-                      <tr key={index} className="border-b border-slate-700 hover:bg-slate-800/50 transition-colors">
-                        <td className="py-3 px-4">
-                          <span className="font-medium text-white capitalize">{mois.mois}</span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-blue-400">{mois.recettes_mois.toLocaleString('fr-FR')}€</span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-green-400">{mois.debuts_traitement}</span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-purple-400">{mois.premieres_consultations}</span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-orange-400">{mois.taux_transformation_enfants}%</span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="font-bold text-red-400">{mois.rdv_manques}</span>
-                        </td>
-                      </tr>
-                    ))}
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Débuts traitement</td>
+                      <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.debuts_traitement}</td>
+                      <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.debuts_traitement}</td>
+                      <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.debuts_traitement}</td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Cumul débuts</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.cumul_debuts_traitement}</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.cumul_debuts_traitement}</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.cumul_debuts_traitement}</td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Consultations</td>
+                      <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.premieres_consultations}</td>
+                      <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.premieres_consultations}</td>
+                      <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.premieres_consultations}</td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Recettes (K€)</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.recettes_mois / 1000}K</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.recettes_mois / 1000}K</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.recettes_mois / 1000}K</td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Cumul recettes (K€)</td>
+                      <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.cumul_recettes / 1000}K</td>
+                      <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.cumul_recettes / 1000}K</td>
+                      <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.cumul_recettes / 1000}K</td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Taux transf. enfants (%)</td>
+                      <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[0].diagnostics_enfants.taux_transformation_enfants}%</td>
+                      <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[1].diagnostics_enfants.taux_transformation_enfants}%</td>
+                      <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[2].diagnostics_enfants.taux_transformation_enfants}%</td>
+                    </tr>
+                    <tr className="border-b border-slate-700">
+                      <td className="py-2 px-2 text-slate-300">Taux transf. CSE (%)</td>
+                      <td className="py-2 px-2 text-red-400 font-bold">{donneesHistoriquesCompletes[0].consultations_cse.taux_transformation_cse}%</td>
+                      <td className="py-2 px-2 text-red-400 font-bold">{donneesHistoriquesCompletes[1].consultations_cse.taux_transformation_cse}%</td>
+                      <td className="py-2 px-2 text-yellow-400 font-bold">{donneesHistoriquesCompletes[2].consultations_cse.taux_transformation_cse}%</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -861,135 +917,16 @@ function App() {
           </TabsContent>
 
           <TabsContent value="saisie">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Informations générales */}
-              <Card className="powerbi-section">
-                <h3 className="text-xl font-bold mb-4 text-white">Informations Générales</h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="mois" className="text-slate-300">Mois</Label>
-                    <Input
-                      id="mois"
-                      value={currentData.mois}
-                      onChange={(e) => setCurrentData(prev => ({ ...prev, mois: e.target.value }))}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="annee" className="text-slate-300">Année</Label>
-                    <Input
-                      id="annee"
-                      type="number"
-                      value={currentData.annee}
-                      onChange={(e) => setCurrentData(prev => ({ ...prev, annee: parseInt(e.target.value) || 2025 }))}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                </div>
-              </Card>
-
-              {/* Métriques d'activité */}
-              <Card className="powerbi-section">
-                <h3 className="text-xl font-bold mb-4 text-white">Métriques d'Activité</h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="debuts_traitement" className="text-slate-300">Débuts de traitement</Label>
-                    <Input
-                      id="debuts_traitement"
-                      type="number"
-                      value={currentData.metriques_activite.debuts_traitement}
-                      onChange={(e) => updateNestedData('metriques_activite', 'debuts_traitement', parseInt(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="premieres_consultations" className="text-slate-300">Premières consultations</Label>
-                    <Input
-                      id="premieres_consultations"
-                      type="number"
-                      value={currentData.metriques_activite.premieres_consultations}
-                      onChange={(e) => updateNestedData('metriques_activite', 'premieres_consultations', parseInt(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="recettes_mois" className="text-slate-300">Recettes du mois (€)</Label>
-                    <Input
-                      id="recettes_mois"
-                      type="number"
-                      step="0.01"
-                      value={currentData.metriques_activite.recettes_mois}
-                      onChange={(e) => updateNestedData('metriques_activite', 'recettes_mois', parseFloat(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                </div>
-              </Card>
-
-              {/* Consultations CSE */}
-              <Card className="powerbi-section">
-                <h3 className="text-xl font-bold mb-4 text-white">Consultations CSE</h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="nombre_cse" className="text-slate-300">Nombre CSE</Label>
-                    <Input
-                      id="nombre_cse"
-                      type="number"
-                      value={currentData.consultations_cse.nombre_cse}
-                      onChange={(e) => updateNestedData('consultations_cse', 'nombre_cse', parseInt(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="taux_transformation_cse" className="text-slate-300">Taux transformation CSE (%)</Label>
-                    <Input
-                      id="taux_transformation_cse"
-                      type="number"
-                      step="0.1"
-                      value={currentData.consultations_cse.taux_transformation_cse}
-                      onChange={(e) => updateNestedData('consultations_cse', 'taux_transformation_cse', parseFloat(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                </div>
-              </Card>
-
-              {/* Diagnostics Enfants */}
-              <Card className="powerbi-section">
-                <h3 className="text-xl font-bold mb-4 text-white">Diagnostics Enfants</h3>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="nombre_diagnostics_enfants" className="text-slate-300">Nombre diagnostics enfants</Label>
-                    <Input
-                      id="nombre_diagnostics_enfants"
-                      type="number"
-                      value={currentData.diagnostics_enfants.nombre_diagnostics_enfants}
-                      onChange={(e) => updateNestedData('diagnostics_enfants', 'nombre_diagnostics_enfants', parseInt(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="taux_transformation_enfants" className="text-slate-300">Taux transformation enfants (%)</Label>
-                    <Input
-                      id="taux_transformation_enfants"
-                      type="number"
-                      step="0.1"
-                      value={currentData.diagnostics_enfants.taux_transformation_enfants}
-                      onChange={(e) => updateNestedData('diagnostics_enfants', 'taux_transformation_enfants', parseFloat(e.target.value) || 0)}
-                      className="bg-slate-700 border-slate-600 text-white"
-                    />
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            <div className="mt-8 flex justify-center">
+            <div className="text-center py-12">
+              <FileText className="w-16 h-16 text-slate-500 mx-auto mb-4" />
+              <p className="text-slate-400 text-lg">Module de saisie en développement</p>
+              <p className="text-sm text-slate-500">Les données complètes sont déjà intégrées pour mars-mai 2025</p>
               <Button
                 onClick={sauvegarderDonnees}
                 disabled={loading}
-                className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 transform hover:scale-105"
+                className="mt-4 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200"
               >
-                {loading ? 'Sauvegarde en cours...' : 'Sauvegarder les données'}
+                {loading ? 'Sauvegarde...' : 'Sauvegarder données actuelles'}
               </Button>
             </div>
           </TabsContent>
@@ -1001,14 +938,14 @@ function App() {
                   <h3 className="text-xl font-bold text-white">Intelligence Business • Recommandations</h3>
                 </div>
                 <p className="text-slate-300 mb-6">
-                  Analyse prédictive des performances avec suggestions personnalisées
+                  Analyse complète des performances orthodontiques avec recommandations expertes
                 </p>
                 
                 {recommandations.length === 0 ? (
                   <div className="text-center py-12">
                     <Zap className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                    <p className="text-slate-400 text-lg">Aucune recommandation disponible</p>
-                    <p className="text-sm text-slate-500">Saisissez des données pour déclencher l'analyse IA</p>
+                    <p className="text-slate-400 text-lg">Générez des recommandations</p>
+                    <p className="text-sm text-slate-500">Cliquez sur sauvegarder pour déclencher l'analyse IA complète</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -1042,14 +979,14 @@ function App() {
           <TabsContent value="historique">
             <div className="powerbi-section">
               <div className="powerbi-section-header">
-                <h3 className="text-xl font-bold text-white">Historique des Données • Archive</h3>
+                <h3 className="text-xl font-bold text-white">Données Historiques Complètes</h3>
               </div>
               
               {tableaux.length === 0 ? (
                 <div className="text-center py-12">
                   <FileText className="w-16 h-16 text-slate-500 mx-auto mb-4" />
                   <p className="text-slate-400 text-lg">Aucun tableau de bord sauvegardé</p>
-                  <p className="text-sm text-slate-500">Les données saisies apparaîtront ici</p>
+                  <p className="text-sm text-slate-500">Les données historiques s'afficheront après sauvegarde</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -1058,11 +995,12 @@ function App() {
                       <tr className="border-b border-slate-600">
                         <th className="text-left py-4 px-4 font-semibold text-slate-300">Période</th>
                         <th className="text-left py-4 px-4 font-semibold text-slate-300">Recettes</th>
-                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Débuts traitement</th>
+                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Cumul recettes</th>
+                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Débuts</th>
+                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Cumul débuts</th>
                         <th className="text-left py-4 px-4 font-semibold text-slate-300">Consultations</th>
-                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Taux transfo. enfants</th>
-                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Date création</th>
-                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Actions</th>
+                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Transf. Enfants</th>
+                        <th className="text-left py-4 px-4 font-semibold text-slate-300">Date</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1072,89 +1010,25 @@ function App() {
                             <span className="font-medium text-white capitalize">{tableau.mois} {tableau.annee}</span>
                           </td>
                           <td className="py-4 px-4">
-                            {editingId === tableau.id ? (
-                              <Input
-                                type="number"
-                                value={editData.recettes_mois}
-                                onChange={(e) => setEditData({...editData, recettes_mois: e.target.value})}
-                                className="bg-slate-700 border-slate-600 text-white w-32"
-                              />
-                            ) : (
-                              <span className="font-bold text-blue-400">{tableau.metriques_activite.recettes_mois.toLocaleString('fr-FR')}€</span>
-                            )}
+                            <span className="font-bold text-blue-400">{tableau.metriques_activite.recettes_mois.toLocaleString('fr-FR')}€</span>
                           </td>
                           <td className="py-4 px-4">
-                            {editingId === tableau.id ? (
-                              <Input
-                                type="number"
-                                value={editData.debuts_traitement}
-                                onChange={(e) => setEditData({...editData, debuts_traitement: e.target.value})}
-                                className="bg-slate-700 border-slate-600 text-white w-20"
-                              />
-                            ) : (
-                              <span className="font-bold text-green-400">{tableau.metriques_activite.debuts_traitement}</span>
-                            )}
+                            <span className="font-bold text-emerald-400">{tableau.metriques_activite.cumul_recettes.toLocaleString('fr-FR')}€</span>
                           </td>
                           <td className="py-4 px-4">
-                            {editingId === tableau.id ? (
-                              <Input
-                                type="number"
-                                value={editData.premieres_consultations}
-                                onChange={(e) => setEditData({...editData, premieres_consultations: e.target.value})}
-                                className="bg-slate-700 border-slate-600 text-white w-20"
-                              />
-                            ) : (
-                              <span className="font-bold text-purple-400">{tableau.metriques_activite.premieres_consultations}</span>
-                            )}
+                            <span className="font-bold text-green-400">{tableau.metriques_activite.debuts_traitement}</span>
                           </td>
                           <td className="py-4 px-4">
-                            {editingId === tableau.id ? (
-                              <Input
-                                type="number"
-                                step="0.1"
-                                value={editData.taux_transformation_enfants}
-                                onChange={(e) => setEditData({...editData, taux_transformation_enfants: e.target.value})}
-                                className="bg-slate-700 border-slate-600 text-white w-20"
-                              />
-                            ) : (
-                              <span className="font-bold text-orange-400">{tableau.diagnostics_enfants.taux_transformation_enfants}%</span>
-                            )}
+                            <span className="font-bold text-green-300">{tableau.metriques_activite.cumul_debuts_traitement}</span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <span className="font-bold text-purple-400">{tableau.metriques_activite.premieres_consultations}</span>
+                          </td>
+                          <td className="py-4 px-4">
+                            <span className="font-bold text-orange-400">{tableau.diagnostics_enfants.taux_transformation_enfants}%</span>
                           </td>
                           <td className="py-4 px-4 text-sm text-slate-400">
                             {new Date(tableau.date_creation).toLocaleDateString('fr-FR')}
-                          </td>
-                          <td className="py-4 px-4">
-                            <div className="flex items-center space-x-2">
-                              {editingId === tableau.id ? (
-                                <>
-                                  <Button
-                                    size="sm"
-                                    onClick={() => saveEdit(tableau.id)}
-                                    disabled={loading}
-                                    className="bg-green-600 hover:bg-green-700 text-white"
-                                  >
-                                    <Save className="w-4 h-4" />
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    onClick={cancelEdit}
-                                    className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                                  >
-                                    <X className="w-4 h-4" />
-                                  </Button>
-                                </>
-                              ) : (
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  onClick={() => startEdit(tableau)}
-                                  className="border-slate-600 text-slate-300 hover:bg-slate-700"
-                                >
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                              )}
-                            </div>
                           </td>
                         </tr>
                       ))}
