@@ -256,7 +256,9 @@ async def creer_tableau_bord(donnees: TableauBordMensuel):
 async def lister_tableaux_bord():
     try:
         tableaux = await db.tableaux_bord.find({}).sort("annee", -1).sort("mois", -1).to_list(length=100)
-        return {"tableaux": tableaux}
+        # Clean MongoDB ObjectIds
+        cleaned_tableaux = [clean_mongo_doc(tableau) for tableau in tableaux]
+        return {"tableaux": cleaned_tableaux}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
