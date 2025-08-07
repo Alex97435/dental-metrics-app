@@ -289,6 +289,8 @@ async def modifier_tableau_bord(tableau_id: str, donnees: TableauBordMensuel):
             raise HTTPException(status_code=404, detail="Tableau de bord non trouvé")
             
         return {"success": True}
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
