@@ -7,59 +7,62 @@ import { Label } from './components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge } from './components/ui/badge';
 import { Alert, AlertDescription } from './components/ui/alert';
-import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck } from 'lucide-react';
 
 function App() {
   const [currentData, setCurrentData] = useState({
-    mois: 'juin',
-    annee: 2024,
-    dossiers_inactifs: {
-      nouveaux_cas: 2846,
-      consultants_attente: 4335,
-      en_attente: 18,
-      abandons: 1867,
-      demenagements: 562,
-      soins_termines: 10,
-      traitements_finis: 3366,
-      repris_archives: 95,
-      interruptions: 0
+    mois: 'mai',
+    annee: 2025,
+    metriques_activite: {
+      debuts_traitement: 41,
+      premieres_consultations: 37,
+      deposes: 22,
+      recettes_mois: 167000,
+      rdv_manques: 131,
+      rdv_presents: 900
     },
-    dossiers_actifs: {
-      phase_1: 703,
-      phase_2: 79,
-      phase_3: 3,
-      pause: 18,
-      pause_1: 1,
-      pause_2: 0,
-      pause_3: 0,
-      contentions: 140
+    ressources_humaines: {
+      jours_collaborateur: 19,
+      jours_dr_vergez: 13
     },
-    activite: {
-      premieres_consultations: 36,
-      compte_rendus: 0,
-      debuts_traitement: 32,
-      poses_amovibles: 0,
-      poses_fixes: 0,
-      abandons_departs: 28
+    consultations_cse: {
+      nombre_cse: 20,
+      en_traitement_attente_cse: 3,
+      taux_transformation_cse: 15.0
     },
-    recettes: {
-      especes: 7977.30,
-      cheques: 7203.30,
-      cartes_bancaires: 102786.71,
-      virements: 33189.18,
-      prelevements: 11179.50
+    diagnostics_enfants: {
+      nombre_diagnostics_enfants: 19,
+      en_traitement_attente_enfants: 15,
+      taux_transformation_enfants: 79.0
     },
-    actes: {
-      cs: { coefficient: 0.00, montant: 0, nombre: 0 },
-      csd: { coefficient: 28.00, montant: 772.80, nombre: 28 },
-      hn: { coefficient: 63.00, montant: 72341.90, nombre: 63 },
-      to: { coefficient: 7800.00, montant: 88105.84, nombre: 224 },
-      z: { coefficient: 2220.00, montant: 3319.56, nombre: 148 }
+    consultations_csa: {
+      nombre_csa: 17,
+      en_traitement_attente_csa: 0,
+      taux_transformation_csa: 0.0
+    },
+    devis: {
+      total_devis_acceptes: 120000,
+      nombre_devis_acceptes: 23
+    },
+    comparaisons: {
+      debuts_traitement_evolution: 37.0,
+      consultations_evolution: -3.0,
+      deposes_evolution: -12.0,
+      recettes_evolution: 1.0,
+      rdv_manques_evolution: 9.0,
+      rdv_presents_evolution: 12.0,
+      jours_collaborateur_evolution: 6.0,
+      jours_vergez_evolution: 30.0,
+      cse_evolution: 33.0,
+      diagnostics_enfants_evolution: -5.0,
+      csa_evolution: -26.0,
+      devis_evolution: -26.0
     }
   });
 
   const [tableaux, setTableaux] = useState([]);
   const [recommandations, setRecommandations] = useState([]);
+  const [rectifications, setRectifications] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -69,11 +72,12 @@ function App() {
   useEffect(() => {
     chargerTableaux();
     chargerRecommandations();
+    chargerRectifications();
   }, []);
 
   const chargerTableaux = async () => {
     try {
-      const response = await fetch(`${backendUrl}/api/tableau-bord`);
+      const response = await fetch(`${backendUrl}/api/tableau-bord-vergez`);
       const data = await response.json();
       setTableaux(data.tableaux || []);
     } catch (error) {
@@ -83,7 +87,7 @@ function App() {
 
   const chargerRecommandations = async () => {
     try {
-      const response = await fetch(`${backendUrl}/api/recommandations`);
+      const response = await fetch(`${backendUrl}/api/recommandations-vergez`);
       const data = await response.json();
       setRecommandations(data.recommandations || []);
     } catch (error) {
@@ -91,10 +95,20 @@ function App() {
     }
   };
 
+  const chargerRectifications = async () => {
+    try {
+      const response = await fetch(`${backendUrl}/api/rectifications-recettes`);
+      const data = await response.json();
+      setRectifications(data.rectifications || []);
+    } catch (error) {
+      console.error('Erreur chargement rectifications:', error);
+    }
+  };
+
   const sauvegarderDonnees = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/api/tableau-bord`, {
+      const response = await fetch(`${backendUrl}/api/tableau-bord-vergez`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(currentData)
@@ -113,21 +127,6 @@ function App() {
     setLoading(false);
   };
 
-  const calculerTotalRecettes = () => {
-    const { especes, cheques, cartes_bancaires, virements, prelevements } = currentData.recettes;
-    return especes + cheques + cartes_bancaires + virements + prelevements;
-  };
-
-  const calculerTotalDossiersActifs = () => {
-    const { phase_1, phase_2, phase_3 } = currentData.dossiers_actifs;
-    return phase_1 + phase_2 + phase_3;
-  };
-
-  const calculerTotalDossiersInactifs = () => {
-    const { nouveaux_cas, consultants_attente, en_attente, abandons, demenagements, soins_termines, traitements_finis, repris_archives, interruptions } = currentData.dossiers_inactifs;
-    return nouveaux_cas + consultants_attente + en_attente + abandons + demenagements + soins_termines + traitements_finis + repris_archives + interruptions;
-  };
-
   const updateNestedData = (section, field, value) => {
     setCurrentData(prev => ({
       ...prev,
@@ -138,17 +137,16 @@ function App() {
     }));
   };
 
-  const updateActeData = (acte, field, value) => {
-    setCurrentData(prev => ({
-      ...prev,
-      actes: {
-        ...prev.actes,
-        [acte]: {
-          ...prev.actes[acte],
-          [field]: typeof value === 'string' ? parseFloat(value) || 0 : value
-        }
-      }
-    }));
+  const getEvolutionIcon = (evolution) => {
+    if (evolution > 0) return <TrendingUp className="w-4 h-4 text-green-500" />;
+    if (evolution < 0) return <TrendingDown className="w-4 h-4 text-red-500" />;
+    return <Activity className="w-4 h-4 text-gray-500" />;
+  };
+
+  const getEvolutionColor = (evolution) => {
+    if (evolution > 0) return 'text-green-600 bg-green-50';
+    if (evolution < 0) return 'text-red-600 bg-red-50';
+    return 'text-gray-600 bg-gray-50';
   };
 
   const getRecommandationIcon = (type) => {
@@ -169,19 +167,24 @@ function App() {
     }
   };
 
+  const calculerTauxRdvManques = () => {
+    const total = currentData.metriques_activite.rdv_manques + currentData.metriques_activite.rdv_presents;
+    return total > 0 ? (currentData.metriques_activite.rdv_manques / total * 100).toFixed(1) : 0;
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       <div className="container mx-auto p-6">
         <header className="mb-8">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-slate-800 mb-2">
-                Cabinet Du Docteur Vergez et Associés
+                SELARL Dr VERGEZ et Associés
               </h1>
-              <p className="text-slate-600">Tableau de bord orthodontique - Suivi d'activité</p>
+              <p className="text-slate-600">Tableau de bord orthodontique - Suivi de performance mensuel</p>
             </div>
             <div className="text-right">
-              <Badge variant="outline" className="text-lg px-4 py-2">
+              <Badge variant="outline" className="text-lg px-4 py-2 bg-blue-50">
                 <Calendar className="w-4 h-4 mr-2" />
                 {currentData.mois} {currentData.annee}
               </Badge>
@@ -196,118 +199,192 @@ function App() {
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-4 mb-6">
+          <TabsList className="grid w-full grid-cols-5 mb-6">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="saisie">Saisie des données</TabsTrigger>
+            <TabsTrigger value="saisie">Saisie</TabsTrigger>
             <TabsTrigger value="recommandations">Recommandations</TabsTrigger>
             <TabsTrigger value="historique">Historique</TabsTrigger>
+            <TabsTrigger value="rectifications">Rectifications</TabsTrigger>
           </TabsList>
 
           <TabsContent value="dashboard">
+            {/* Métriques principales */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              {/* Métriques principales */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
+              <Card className="p-6 bg-white/90 backdrop-blur-sm border-l-4 border-l-blue-500">
+                <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Recettes totales</p>
+                    <p className="text-sm font-medium text-gray-600">Recettes du mois</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {calculerTotalRecettes().toLocaleString('fr-FR')}€
+                      {currentData.metriques_activite.recettes_mois.toLocaleString('fr-FR')}€
                     </p>
                   </div>
                   <Euro className="w-8 h-8 text-blue-600" />
                 </div>
-              </Card>
-
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-gray-600">Dossiers actifs</p>
-                    <p className="text-2xl font-bold text-gray-900">
-                      {calculerTotalDossiersActifs()}
-                    </p>
-                  </div>
-                  <Users className="w-8 h-8 text-green-600" />
+                <div className={`flex items-center text-sm px-2 py-1 rounded-full ${getEvolutionColor(currentData.comparaisons.recettes_evolution)}`}>
+                  {getEvolutionIcon(currentData.comparaisons.recettes_evolution)}
+                  <span className="ml-1">{currentData.comparaisons.recettes_evolution > 0 ? '+' : ''}{currentData.comparaisons.recettes_evolution}% vs N-1</span>
                 </div>
               </Card>
 
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
+              <Card className="p-6 bg-white/90 backdrop-blur-sm border-l-4 border-l-green-500">
+                <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Consultations</p>
+                    <p className="text-sm font-medium text-gray-600">Débuts de traitement</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {currentData.activite.premieres_consultations}
+                      {currentData.metriques_activite.debuts_traitement}
                     </p>
                   </div>
-                  <FileText className="w-8 h-8 text-purple-600" />
+                  <Activity className="w-8 h-8 text-green-600" />
+                </div>
+                <div className={`flex items-center text-sm px-2 py-1 rounded-full ${getEvolutionColor(currentData.comparaisons.debuts_traitement_evolution)}`}>
+                  {getEvolutionIcon(currentData.comparaisons.debuts_traitement_evolution)}
+                  <span className="ml-1">{currentData.comparaisons.debuts_traitement_evolution > 0 ? '+' : ''}{currentData.comparaisons.debuts_traitement_evolution}% vs N-1</span>
                 </div>
               </Card>
 
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <div className="flex items-center justify-between">
+              <Card className="p-6 bg-white/90 backdrop-blur-sm border-l-4 border-l-purple-500">
+                <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total dossiers</p>
+                    <p className="text-sm font-medium text-gray-600">Premières consultations</p>
                     <p className="text-2xl font-bold text-gray-900">
-                      {calculerTotalDossiersActifs() + calculerTotalDossiersInactifs()}
+                      {currentData.metriques_activite.premieres_consultations}
                     </p>
                   </div>
-                  <TrendingUp className="w-8 h-8 text-orange-600" />
+                  <Users className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className={`flex items-center text-sm px-2 py-1 rounded-full ${getEvolutionColor(currentData.comparaisons.consultations_evolution)}`}>
+                  {getEvolutionIcon(currentData.comparaisons.consultations_evolution)}
+                  <span className="ml-1">{currentData.comparaisons.consultations_evolution > 0 ? '+' : ''}{currentData.comparaisons.consultations_evolution}% vs N-1</span>
+                </div>
+              </Card>
+
+              <Card className="p-6 bg-white/90 backdrop-blur-sm border-l-4 border-l-orange-500">
+                <div className="flex items-center justify-between mb-2">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">Taux RDV manqués</p>
+                    <p className="text-2xl font-bold text-gray-900">
+                      {calculerTauxRdvManques()}%
+                    </p>
+                  </div>
+                  <Clock className="w-8 h-8 text-orange-600" />
+                </div>
+                <div className={`flex items-center text-sm px-2 py-1 rounded-full ${getEvolutionColor(currentData.comparaisons.rdv_manques_evolution)}`}>
+                  {getEvolutionIcon(currentData.comparaisons.rdv_manques_evolution)}
+                  <span className="ml-1">{currentData.comparaisons.rdv_manques_evolution > 0 ? '+' : ''}{currentData.comparaisons.rdv_manques_evolution}% vs N-1</span>
                 </div>
               </Card>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Tableau des dossiers */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <h3 className="text-xl font-bold mb-4">Gestion des Dossiers</h3>
+            {/* Détails des consultations et transformations */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+              {/* Consultations CSE */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-lg font-bold mb-4 text-blue-800">Consultations CSE</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Nombre CSE:</span>
+                    <span className="font-semibold">{currentData.consultations_cse.nombre_cse}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">En traitement/attente:</span>
+                    <span className="font-semibold">{currentData.consultations_cse.en_traitement_attente_cse}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Taux de transformation:</span>
+                    <Badge variant={currentData.consultations_cse.taux_transformation_cse < 20 ? 'destructive' : 'default'}>
+                      {currentData.consultations_cse.taux_transformation_cse}%
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Diagnostics Enfants */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-lg font-bold mb-4 text-green-800">Diagnostics Enfants</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Diagnostics:</span>
+                    <span className="font-semibold">{currentData.diagnostics_enfants.nombre_diagnostics_enfants}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">En traitement/attente:</span>
+                    <span className="font-semibold">{currentData.diagnostics_enfants.en_traitement_attente_enfants}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Taux de transformation:</span>
+                    <Badge variant={currentData.diagnostics_enfants.taux_transformation_enfants > 70 ? 'default' : 'secondary'}>
+                      {currentData.diagnostics_enfants.taux_transformation_enfants}%
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Consultations CSA */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-lg font-bold mb-4 text-purple-800">Consultations CSA</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Nombre CSA:</span>
+                    <span className="font-semibold">{currentData.consultations_csa.nombre_csa}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">En traitement/attente:</span>
+                    <span className="font-semibold">{currentData.consultations_csa.en_traitement_attente_csa}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Taux de transformation:</span>
+                    <Badge variant={currentData.consultations_csa.taux_transformation_csa === 0 ? 'destructive' : 'default'}>
+                      {currentData.consultations_csa.taux_transformation_csa}%
+                    </Badge>
+                  </div>
+                </div>
+              </Card>
+            </div>
+
+            {/* Ressources Humaines et Devis */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-lg font-bold mb-4 text-indigo-800">Ressources Humaines</h3>
                 <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">Dossiers Inactifs</h4>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div>Nouveaux cas: <span className="font-medium">{currentData.dossiers_inactifs.nouveaux_cas}</span></div>
-                      <div>En attente: <span className="font-medium">{currentData.dossiers_inactifs.en_attente}</span></div>
-                      <div>Consultants: <span className="font-medium">{currentData.dossiers_inactifs.consultants_attente}</span></div>
-                      <div>Abandons: <span className="font-medium">{currentData.dossiers_inactifs.abandons}</span></div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Jours collaborateur:</span>
+                    <div className="flex items-center">
+                      <span className="font-semibold mr-2">{currentData.ressources_humaines.jours_collaborateur}</span>
+                      <div className={`flex items-center text-xs px-2 py-1 rounded ${getEvolutionColor(currentData.comparaisons.jours_collaborateur_evolution)}`}>
+                        {getEvolutionIcon(currentData.comparaisons.jours_collaborateur_evolution)}
+                        <span className="ml-1">{currentData.comparaisons.jours_collaborateur_evolution > 0 ? '+' : ''}{currentData.comparaisons.jours_collaborateur_evolution}%</span>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-700 mb-2">Dossiers Actifs</h4>
-                    <div className="grid grid-cols-2 gap-2 text-sm">
-                      <div>Phase 1: <span className="font-medium">{currentData.dossiers_actifs.phase_1}</span></div>
-                      <div>Phase 2: <span className="font-medium">{currentData.dossiers_actifs.phase_2}</span></div>
-                      <div>Phase 3: <span className="font-medium">{currentData.dossiers_actifs.phase_3}</span></div>
-                      <div>Contentions: <span className="font-medium">{currentData.dossiers_actifs.contentions}</span></div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Jours Dr Vergez:</span>
+                    <div className="flex items-center">
+                      <span className="font-semibold mr-2">{currentData.ressources_humaines.jours_dr_vergez}</span>
+                      <div className={`flex items-center text-xs px-2 py-1 rounded ${getEvolutionColor(currentData.comparaisons.jours_vergez_evolution)}`}>
+                        {getEvolutionIcon(currentData.comparaisons.jours_vergez_evolution)}
+                        <span className="ml-1">{currentData.comparaisons.jours_vergez_evolution > 0 ? '+' : ''}{currentData.comparaisons.jours_vergez_evolution}%</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </Card>
 
-              {/* Tableau des recettes */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <h3 className="text-xl font-bold mb-4">Recettes par Mode de Paiement</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span>Espèces:</span>
-                    <span className="font-medium">{currentData.recettes.especes.toLocaleString('fr-FR')}€</span>
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-lg font-bold mb-4 text-emerald-800">Devis</h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Total acceptés:</span>
+                    <div className="flex items-center">
+                      <span className="font-semibold mr-2">{currentData.devis.total_devis_acceptes.toLocaleString('fr-FR')}€</span>
+                      <div className={`flex items-center text-xs px-2 py-1 rounded ${getEvolutionColor(currentData.comparaisons.devis_evolution)}`}>
+                        {getEvolutionIcon(currentData.comparaisons.devis_evolution)}
+                        <span className="ml-1">{currentData.comparaisons.devis_evolution > 0 ? '+' : ''}{currentData.comparaisons.devis_evolution}%</span>
+                      </div>
+                    </div>
                   </div>
                   <div className="flex justify-between">
-                    <span>Chèques:</span>
-                    <span className="font-medium">{currentData.recettes.cheques.toLocaleString('fr-FR')}€</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Cartes bancaires:</span>
-                    <span className="font-medium">{currentData.recettes.cartes_bancaires.toLocaleString('fr-FR')}€</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Virements:</span>
-                    <span className="font-medium">{currentData.recettes.virements.toLocaleString('fr-FR')}€</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Prélèvements:</span>
-                    <span className="font-medium">{currentData.recettes.prelevements.toLocaleString('fr-FR')}€</span>
-                  </div>
-                  <div className="border-t pt-2 flex justify-between font-bold text-lg">
-                    <span>Total:</span>
-                    <span>{calculerTotalRecettes().toLocaleString('fr-FR')}€</span>
+                    <span className="text-gray-600">Nombre acceptés:</span>
+                    <span className="font-semibold">{currentData.devis.nombre_devis_acceptes}</span>
                   </div>
                 </div>
               </Card>
@@ -317,7 +394,7 @@ function App() {
           <TabsContent value="saisie">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Informations générales */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
                 <h3 className="text-xl font-bold mb-4">Informations Générales</h3>
                 <div className="space-y-4">
                   <div>
@@ -334,84 +411,173 @@ function App() {
                       id="annee"
                       type="number"
                       value={currentData.annee}
-                      onChange={(e) => setCurrentData(prev => ({ ...prev, annee: parseInt(e.target.value) || 2024 }))}
+                      onChange={(e) => setCurrentData(prev => ({ ...prev, annee: parseInt(e.target.value) || 2025 }))}
                     />
                   </div>
                 </div>
               </Card>
 
-              {/* Activité mensuelle */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <h3 className="text-xl font-bold mb-4">Activité Mensuelle</h3>
+              {/* Métriques d'activité */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-xl font-bold mb-4">Métriques d'Activité</h3>
                 <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="premieres_consultations">Premières consultations</Label>
-                    <Input
-                      id="premieres_consultations"
-                      type="number"
-                      value={currentData.activite.premieres_consultations}
-                      onChange={(e) => updateNestedData('activite', 'premieres_consultations', parseInt(e.target.value) || 0)}
-                    />
-                  </div>
                   <div>
                     <Label htmlFor="debuts_traitement">Débuts de traitement</Label>
                     <Input
                       id="debuts_traitement"
                       type="number"
-                      value={currentData.activite.debuts_traitement}
-                      onChange={(e) => updateNestedData('activite', 'debuts_traitement', parseInt(e.target.value) || 0)}
+                      value={currentData.metriques_activite.debuts_traitement}
+                      onChange={(e) => updateNestedData('metriques_activite', 'debuts_traitement', parseInt(e.target.value) || 0)}
                     />
                   </div>
                   <div>
-                    <Label htmlFor="abandons_departs">Abandons ou départs</Label>
+                    <Label htmlFor="premieres_consultations">Premières consultations</Label>
                     <Input
-                      id="abandons_departs"
+                      id="premieres_consultations"
                       type="number"
-                      value={currentData.activite.abandons_departs}
-                      onChange={(e) => updateNestedData('activite', 'abandons_departs', parseInt(e.target.value) || 0)}
+                      value={currentData.metriques_activite.premieres_consultations}
+                      onChange={(e) => updateNestedData('metriques_activite', 'premieres_consultations', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="deposes">Déposes</Label>
+                    <Input
+                      id="deposes"
+                      type="number"
+                      value={currentData.metriques_activite.deposes}
+                      onChange={(e) => updateNestedData('metriques_activite', 'deposes', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="recettes_mois">Recettes du mois (€)</Label>
+                    <Input
+                      id="recettes_mois"
+                      type="number"
+                      step="0.01"
+                      value={currentData.metriques_activite.recettes_mois}
+                      onChange={(e) => updateNestedData('metriques_activite', 'recettes_mois', parseFloat(e.target.value) || 0)}
                     />
                   </div>
                 </div>
               </Card>
 
-              {/* Recettes */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <h3 className="text-xl font-bold mb-4">Recettes</h3>
+              {/* Rendez-vous */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-xl font-bold mb-4">Rendez-vous</h3>
                 <div className="space-y-4">
-                  {Object.entries(currentData.recettes).map(([key, value]) => (
-                    <div key={key}>
-                      <Label htmlFor={key}>
-                        {key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}
-                      </Label>
-                      <Input
-                        id={key}
-                        type="number"
-                        step="0.01"
-                        value={value}
-                        onChange={(e) => updateNestedData('recettes', key, e.target.value)}
-                      />
-                    </div>
-                  ))}
+                  <div>
+                    <Label htmlFor="rdv_manques">RDV manqués</Label>
+                    <Input
+                      id="rdv_manques"
+                      type="number"
+                      value={currentData.metriques_activite.rdv_manques}
+                      onChange={(e) => updateNestedData('metriques_activite', 'rdv_manques', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="rdv_presents">RDV présents</Label>
+                    <Input
+                      id="rdv_presents"
+                      type="number"
+                      value={currentData.metriques_activite.rdv_presents}
+                      onChange={(e) => updateNestedData('metriques_activite', 'rdv_presents', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
                 </div>
               </Card>
 
-              {/* Dossiers Actifs */}
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
-                <h3 className="text-xl font-bold mb-4">Dossiers Actifs</h3>
+              {/* Ressources Humaines */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-xl font-bold mb-4">Ressources Humaines</h3>
                 <div className="space-y-4">
-                  {Object.entries(currentData.dossiers_actifs).map(([key, value]) => (
-                    <div key={key}>
-                      <Label htmlFor={key}>
-                        {key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' ')}
-                      </Label>
-                      <Input
-                        id={key}
-                        type="number"
-                        value={value}
-                        onChange={(e) => updateNestedData('dossiers_actifs', key, parseInt(e.target.value) || 0)}
-                      />
-                    </div>
-                  ))}
+                  <div>
+                    <Label htmlFor="jours_collaborateur">Jours collaborateur</Label>
+                    <Input
+                      id="jours_collaborateur"
+                      type="number"
+                      value={currentData.ressources_humaines.jours_collaborateur}
+                      onChange={(e) => updateNestedData('ressources_humaines', 'jours_collaborateur', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="jours_dr_vergez">Jours Dr Vergez</Label>
+                    <Input
+                      id="jours_dr_vergez"
+                      type="number"
+                      value={currentData.ressources_humaines.jours_dr_vergez}
+                      onChange={(e) => updateNestedData('ressources_humaines', 'jours_dr_vergez', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                </div>
+              </Card>
+
+              {/* Consultations CSE */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-xl font-bold mb-4">Consultations CSE</h3>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="nombre_cse">Nombre CSE</Label>
+                    <Input
+                      id="nombre_cse"
+                      type="number"
+                      value={currentData.consultations_cse.nombre_cse}
+                      onChange={(e) => updateNestedData('consultations_cse', 'nombre_cse', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="en_traitement_attente_cse">En traitement/attente CSE</Label>
+                    <Input
+                      id="en_traitement_attente_cse"
+                      type="number"
+                      value={currentData.consultations_cse.en_traitement_attente_cse}
+                      onChange={(e) => updateNestedData('consultations_cse', 'en_traitement_attente_cse', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taux_transformation_cse">Taux transformation CSE (%)</Label>
+                    <Input
+                      id="taux_transformation_cse"
+                      type="number"
+                      step="0.1"
+                      value={currentData.consultations_cse.taux_transformation_cse}
+                      onChange={(e) => updateNestedData('consultations_cse', 'taux_transformation_cse', parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
+                </div>
+              </Card>
+
+              {/* Diagnostics Enfants */}
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
+                <h3 className="text-xl font-bold mb-4">Diagnostics Enfants</h3>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="nombre_diagnostics_enfants">Nombre diagnostics enfants</Label>
+                    <Input
+                      id="nombre_diagnostics_enfants"
+                      type="number"
+                      value={currentData.diagnostics_enfants.nombre_diagnostics_enfants}
+                      onChange={(e) => updateNestedData('diagnostics_enfants', 'nombre_diagnostics_enfants', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="en_traitement_attente_enfants">En traitement/attente enfants</Label>
+                    <Input
+                      id="en_traitement_attente_enfants"
+                      type="number"
+                      value={currentData.diagnostics_enfants.en_traitement_attente_enfants}
+                      onChange={(e) => updateNestedData('diagnostics_enfants', 'en_traitement_attente_enfants', parseInt(e.target.value) || 0)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="taux_transformation_enfants">Taux transformation enfants (%)</Label>
+                    <Input
+                      id="taux_transformation_enfants"
+                      type="number"
+                      step="0.1"
+                      value={currentData.diagnostics_enfants.taux_transformation_enfants}
+                      onChange={(e) => updateNestedData('diagnostics_enfants', 'taux_transformation_enfants', parseFloat(e.target.value) || 0)}
+                    />
+                  </div>
                 </div>
               </Card>
             </div>
@@ -429,15 +595,15 @@ function App() {
 
           <TabsContent value="recommandations">
             <div className="space-y-6">
-              <Card className="p-6 bg-white/80 backdrop-blur-sm">
+              <Card className="p-6 bg-white/90 backdrop-blur-sm">
                 <h3 className="text-xl font-bold mb-4">Recommandations Automatiques</h3>
                 <p className="text-gray-600 mb-6">
-                  Basées sur l'analyse de vos données d'activité et recettes
+                  Analyse intelligente des performances et suggestions d'amélioration
                 </p>
                 
                 {recommandations.length === 0 ? (
                   <div className="text-center py-8">
-                    <Info className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <Target className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-500">Aucune recommandation disponible pour le moment.</p>
                     <p className="text-sm text-gray-400">Saisissez des données pour obtenir des suggestions personnalisées.</p>
                   </div>
@@ -471,7 +637,7 @@ function App() {
           </TabsContent>
 
           <TabsContent value="historique">
-            <Card className="p-6 bg-white/80 backdrop-blur-sm">
+            <Card className="p-6 bg-white/90 backdrop-blur-sm">
               <h3 className="text-xl font-bold mb-4">Historique des Tableaux de Bord</h3>
               
               {tableaux.length === 0 ? (
@@ -486,40 +652,96 @@ function App() {
                     <thead>
                       <tr className="border-b border-gray-200">
                         <th className="text-left py-3 px-4 font-semibold">Période</th>
-                        <th className="text-left py-3 px-4 font-semibold">Recettes totales</th>
+                        <th className="text-left py-3 px-4 font-semibold">Recettes</th>
+                        <th className="text-left py-3 px-4 font-semibold">Débuts traitement</th>
                         <th className="text-left py-3 px-4 font-semibold">Consultations</th>
-                        <th className="text-left py-3 px-4 font-semibold">Dossiers actifs</th>
+                        <th className="text-left py-3 px-4 font-semibold">Taux transfo. enfants</th>
                         <th className="text-left py-3 px-4 font-semibold">Date création</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {tableaux.map((tableau, index) => {
-                        const totalRecettes = tableau.recettes.especes + tableau.recettes.cheques + 
-                                            tableau.recettes.cartes_bancaires + tableau.recettes.virements + 
-                                            tableau.recettes.prelevements;
-                        const totalActifs = tableau.dossiers_actifs.phase_1 + tableau.dossiers_actifs.phase_2 + 
-                                          tableau.dossiers_actifs.phase_3;
-                        
-                        return (
-                          <tr key={tableau.id || index} className="border-b border-gray-100 hover:bg-gray-50">
-                            <td className="py-3 px-4">
-                              <span className="font-medium">{tableau.mois} {tableau.annee}</span>
-                            </td>
-                            <td className="py-3 px-4">
-                              {totalRecettes.toLocaleString('fr-FR')}€
-                            </td>
-                            <td className="py-3 px-4">
-                              {tableau.activite.premieres_consultations}
-                            </td>
-                            <td className="py-3 px-4">
-                              {totalActifs}
-                            </td>
-                            <td className="py-3 px-4 text-sm text-gray-500">
-                              {new Date(tableau.date_creation).toLocaleDateString('fr-FR')}
-                            </td>
-                          </tr>
-                        );
-                      })}
+                      {tableaux.map((tableau, index) => (
+                        <tr key={tableau.id || index} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="py-3 px-4">
+                            <span className="font-medium">{tableau.mois} {tableau.annee}</span>
+                          </td>
+                          <td className="py-3 px-4">
+                            {tableau.metriques_activite.recettes_mois.toLocaleString('fr-FR')}€
+                          </td>
+                          <td className="py-3 px-4">
+                            {tableau.metriques_activite.debuts_traitement}
+                          </td>
+                          <td className="py-3 px-4">
+                            {tableau.metriques_activite.premieres_consultations}
+                          </td>
+                          <td className="py-3 px-4">
+                            {tableau.diagnostics_enfants.taux_transformation_enfants}%
+                          </td>
+                          <td className="py-3 px-4 text-sm text-gray-500">
+                            {new Date(tableau.date_creation).toLocaleDateString('fr-FR')}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="rectifications">
+            <Card className="p-6 bg-white/90 backdrop-blur-sm">
+              <h3 className="text-xl font-bold mb-4">Rectifications de Recettes</h3>
+              <p className="text-gray-600 mb-6">
+                Suivi des corrections apportées aux recettes des mois précédents
+              </p>
+              
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-800 mb-2">Rectifications connues :</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                  <div className="flex justify-between">
+                    <span>Janvier 2025:</span>
+                    <span className="font-medium">166 000€</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Février 2025:</span>
+                    <span className="font-medium">179 000€</span>
+                  </div>
+                </div>
+              </div>
+
+              {rectifications.length > 0 && (
+                <div className="overflow-x-auto">
+                  <table className="w-full table-auto border-collapse">
+                    <thead>
+                      <tr className="border-b border-gray-200">
+                        <th className="text-left py-3 px-4 font-semibold">Période</th>
+                        <th className="text-left py-3 px-4 font-semibold">Montant initial</th>
+                        <th className="text-left py-3 px-4 font-semibold">Montant rectifié</th>
+                        <th className="text-left py-3 px-4 font-semibold">Raison</th>
+                        <th className="text-left py-3 px-4 font-semibold">Date</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {rectifications.map((rect, index) => (
+                        <tr key={rect.id || index} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="py-3 px-4">
+                            <span className="font-medium">{rect.mois} {rect.annee}</span>
+                          </td>
+                          <td className="py-3 px-4">
+                            {rect.montant_initial.toLocaleString('fr-FR')}€
+                          </td>
+                          <td className="py-3 px-4">
+                            {rect.montant_rectifie.toLocaleString('fr-FR')}€
+                          </td>
+                          <td className="py-3 px-4 text-sm">
+                            {rect.raison}
+                          </td>
+                          <td className="py-3 px-4 text-sm text-gray-500">
+                            {new Date(rect.date_rectification).toLocaleDateString('fr-FR')}
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
