@@ -268,7 +268,7 @@ async def obtenir_tableau_bord(tableau_id: str):
         tableau = await db.tableaux_bord.find_one({"id": tableau_id})
         if not tableau:
             raise HTTPException(status_code=404, detail="Tableau de bord non trouvé")
-        return tableau
+        return clean_mongo_doc(tableau)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
