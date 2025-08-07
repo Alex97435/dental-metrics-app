@@ -245,15 +245,27 @@ async def creer_tableau_bord_vergez(donnees: TableauBordVergez):
         recommandations = calculer_recommandations_vergez(donnees, precedentes_donnees)
         
         # Sauvegarder les recommandations
+        recommandations_response = []
         for reco in recommandations:
-            reco["id"] = generate_id()
-            reco["date_creation"] = datetime.utcnow()
-            await db.recommandations_vergez.insert_one(reco)
+            reco_copy = reco.copy()
+            reco_copy["id"] = generate_id()
+            reco_copy["date_creation"] = datetime.utcnow()
+            await db.recommandations_vergez.insert_one(reco_copy)
+            
+            # For response, use the original recommendation without datetime
+            recommandations_response.append({
+                "id": reco_copy["id"],
+                "type": reco["type"],
+                "categorie": reco["categorie"],
+                "titre": reco["titre"],
+                "description": reco["description"],
+                "priorite": reco["priorite"]
+            })
         
         return {
             "success": True,
             "id": donnees.id,
-            "recommandations": recommandations
+            "recommandations": recommandations_response
         }
         
     except Exception as e:
