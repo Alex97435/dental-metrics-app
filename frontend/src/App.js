@@ -970,41 +970,204 @@ function App() {
           </TabsContent>
 
           <TabsContent value="analytics">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Header Analytics */}
+            <div className="powerbi-section mb-8">
+              <div className="powerbi-section-header">
+                <h3 className="text-3xl font-bold text-white flex items-center">
+                  <LineChart className="w-10 h-10 mr-4 text-blue-400" />
+                  Analytics & Visualisations Avancées
+                </h3>
+                <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
+                  Mars - Mai 2025
+                </Badge>
+              </div>
+              <p className="text-lg text-slate-300 leading-relaxed">
+                Analyse complète de vos performances orthodontiques avec visualisations interactives 
+                et comparaisons temporelles pour optimiser votre prise de décision.
+              </p>
+            </div>
+
+            {/* KPIs en un coup d'œil */}
+            <div className="powerbi-section mb-8">
+              <div className="powerbi-section-header">
+                <h4 className="text-xl font-semibold text-white">📊 Évolution des KPIs Principaux</h4>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-400 mb-2">
+                    {donneesHistoriquesCompletes[2].metriques_activite.debuts_traitement}
+                  </div>
+                  <p className="text-slate-300 text-sm">Débuts Mai</p>
+                  <div className="text-xs text-green-400 mt-1">
+                    +{donneesHistoriquesCompletes[2].comparaisons.debuts_traitement_evolution}% vs N-1
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-purple-400 mb-2">
+                    {donneesHistoriquesCompletes[2].metriques_activite.premieres_consultations}
+                  </div>
+                  <p className="text-slate-300 text-sm">Consultations</p>
+                  <div className="text-xs text-red-400 mt-1">
+                    {donneesHistoriquesCompletes[2].comparaisons.premieres_consultations_evolution}% vs N-1
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">
+                    {Math.round(donneesHistoriquesCompletes[2].metriques_activite.recettes_mois / 1000)}K€
+                  </div>
+                  <p className="text-slate-300 text-sm">Recettes Mai</p>
+                  <div className="text-xs text-green-400 mt-1">
+                    +{donneesHistoriquesCompletes[2].comparaisons.recettes_evolution}% vs N-1
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-400 mb-2">
+                    {donneesHistoriquesCompletes[2].diagnostics_enfants.taux_transformation_enfants}%
+                  </div>
+                  <p className="text-slate-300 text-sm">Taux Enfants</p>
+                  <div className="text-xs text-green-400 mt-1">
+                    +{donneesHistoriquesCompletes[2].comparaisons.diagnostics_traitement_evolution}% vs N-1
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Graphiques avec titres explicatifs */}
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mb-8">
               <div className="powerbi-section p-6">
+                <div className="mb-4">
+                  <h4 className="text-xl font-bold text-white mb-2 flex items-center">
+                    <Euro className="w-6 h-6 mr-2 text-blue-400" />
+                    Évolution des Recettes
+                  </h4>
+                  <p className="text-slate-300 text-sm">
+                    Tendance croissante avec +1% en mai vs N-1. Objectif: maintenir la progression.
+                  </p>
+                </div>
                 <SimpleChart 
                   data={donneesHistoriquesCompletes} 
                   dataKey="recettes_mois" 
-                  title="Recettes Mensuelles (Mars-Mai 2025)"
+                  title="Recettes Mensuelles (K€)"
                   color="#3b82f6"
                 />
+                <div className="mt-4 text-center">
+                  <span className="text-xs text-slate-400">
+                    📈 Moyenne: {Math.round(donneesHistoriquesCompletes.reduce((acc, d) => acc + d.metriques_activite.recettes_mois, 0) / donneesHistoriquesCompletes.length / 1000)}K€
+                  </span>
+                </div>
               </div>
 
               <div className="powerbi-section p-6">
+                <div className="mb-4">
+                  <h4 className="text-xl font-bold text-white mb-2 flex items-center">
+                    <Activity className="w-6 h-6 mr-2 text-green-400" />
+                    Performance Traitement
+                  </h4>
+                  <p className="text-slate-300 text-sm">
+                    Excellente performance: +37% en mai. Maintenir cette dynamique positive.
+                  </p>
+                </div>
                 <SimpleChart 
                   data={donneesHistoriquesCompletes} 
                   dataKey="debuts_traitement" 
                   title="Débuts de Traitement"
                   color="#10b981"
                 />
+                <div className="mt-4 text-center">
+                  <span className="text-xs text-slate-400">
+                    🎯 Total cumulé: {donneesHistoriquesCompletes[2].metriques_activite.cumul_debuts_traitement} débuts
+                  </span>
+                </div>
               </div>
 
               <div className="powerbi-section p-6">
+                <div className="mb-4">
+                  <h4 className="text-xl font-bold text-white mb-2 flex items-center">
+                    <Users className="w-6 h-6 mr-2 text-purple-400" />
+                    Flux Consultations
+                  </h4>
+                  <p className="text-slate-300 text-sm">
+                    Légère baisse en mai (-3% vs N-1). Optimiser la prospection.
+                  </p>
+                </div>
                 <SimpleChart 
                   data={donneesHistoriquesCompletes} 
                   dataKey="premieres_consultations" 
                   title="Premières Consultations"
                   color="#8b5cf6"
                 />
+                <div className="mt-4 text-center">
+                  <span className="text-xs text-slate-400">
+                    👥 Total cumulé: {donneesHistoriquesCompletes[2].metriques_activite.cumul_premieres_consultations} consultations
+                  </span>
+                </div>
               </div>
 
               <div className="powerbi-section p-6">
+                <div className="mb-4">
+                  <h4 className="text-xl font-bold text-white mb-2 flex items-center">
+                    <Target className="w-6 h-6 mr-2 text-orange-400" />
+                    Taux de Conversion Pédodontie
+                  </h4>
+                  <p className="text-slate-300 text-sm">
+                    Excellent taux: 79% en mai (+7% vs N-1). Performance remarquable.
+                  </p>
+                </div>
                 <SimpleChart 
                   data={donneesHistoriquesCompletes.map(d => ({ ...d, taux_transformation_enfants: d.diagnostics_enfants.taux_transformation_enfants }))}
                   dataKey="taux_transformation_enfants" 
                   title="Taux Transformation Enfants (%)"
                   color="#f59e0b"
                 />
+                <div className="mt-4 text-center">
+                  <span className="text-xs text-slate-400">
+                    🎯 Objectif atteint: >75% (Mai: 79%)
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Insights et Recommandations basées sur les données */}
+            <div className="powerbi-section mb-8">
+              <div className="powerbi-section-header">
+                <h4 className="text-xl font-semibold text-white flex items-center">
+                  <Zap className="w-6 h-6 mr-2 text-yellow-400" />
+                  Insights Automatiques
+                </h4>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4">
+                  <div className="flex items-center mb-2">
+                    <TrendingUp className="w-5 h-5 text-green-400 mr-2" />
+                    <h5 className="text-green-400 font-semibold">Point Fort</h5>
+                  </div>
+                  <p className="text-slate-300 text-sm">
+                    Taux de transformation pédodontie excellent (79%). 
+                    Cette expertise est un avantage concurrentiel majeur.
+                  </p>
+                </div>
+                
+                <div className="bg-orange-900/20 border border-orange-500/30 rounded-lg p-4">
+                  <div className="flex items-center mb-2">
+                    <AlertTriangle className="w-5 h-5 text-orange-400 mr-2" />
+                    <h5 className="text-orange-400 font-semibold">Attention</h5>
+                  </div>
+                  <p className="text-slate-300 text-sm">
+                    Taux CSE faible (15% en mai). Analyser les freins 
+                    et optimiser le processus de conversion.
+                  </p>
+                </div>
+
+                <div className="bg-blue-900/20 border border-blue-500/30 rounded-lg p-4">
+                  <div className="flex items-center mb-2">
+                    <Target className="w-5 h-5 text-blue-400 mr-2" />
+                    <h5 className="text-blue-400 font-semibold">Opportunité</h5>
+                  </div>
+                  <p className="text-slate-300 text-sm">
+                    Débuts en forte croissance (+37%). Anticiper les besoins 
+                    en capacité pour maintenir la qualité.
+                  </p>
+                </div>
               </div>
             </div>
 
