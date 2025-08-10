@@ -510,7 +510,11 @@ function App() {
         )}
 
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-5 mb-8 bg-white/10 backdrop-blur-sm border border-white/20">
+          <TabsList className="grid w-full grid-cols-6 mb-8 bg-white/10 backdrop-blur-sm border border-white/20">
+            <TabsTrigger value="presentation" className="text-white data-[state=active]:bg-white data-[state=active]:text-slate-900">
+              <Presentation className="w-4 h-4 mr-2" />
+              Présentation
+            </TabsTrigger>
             <TabsTrigger value="dashboard" className="text-white data-[state=active]:bg-white data-[state=active]:text-slate-900">
               <BarChart3 className="w-4 h-4 mr-2" />
               Dashboard
