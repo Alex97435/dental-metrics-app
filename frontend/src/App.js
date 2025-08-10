@@ -639,7 +639,7 @@ function App() {
                     <h3 className="text-xl font-bold text-white mb-3">Support Réunionnais</h3>
                     <p className="text-slate-300">
                       Développé et supporté depuis l'île de la Réunion, avec une compréhension 
-                      unique des besoins des praticiens de l'océan Indien.
+                      unique des besoins des orthodontistes français et de leurs spécificités métier.
                     </p>
                   </div>
                 </div>
