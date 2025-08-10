@@ -215,7 +215,7 @@ function App() {
   const [recommandations, setRecommandations] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState('presentation');
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({});
 
