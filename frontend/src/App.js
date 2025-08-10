@@ -1121,7 +1121,7 @@ function App() {
                 />
                 <div className="mt-4 text-center">
                   <span className="text-xs text-slate-400">
-                    🎯 Objectif atteint: >75% (Mai: 79%)
+                    🎯 Objectif atteint: &gt;75% (Mai: 79%)
                   </span>
                 </div>
               </div>
