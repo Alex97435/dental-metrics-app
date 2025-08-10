@@ -6,6 +6,18 @@
   color: #e2e8f0;
 }
 
+/* OrthoManager Logo Styles */
+.ortho-manager-logo {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #4f46e5 100%);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ortho-manager-logo:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.4);
+}
+
 /* PowerBI Style Cards */
 .powerbi-card {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
