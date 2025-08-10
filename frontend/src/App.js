@@ -1046,6 +1046,17 @@ function App() {
           </TabsContent>
         </Tabs>
       </div>
+      
+      {/* Footer OrthoManager */}
+      <footer className="mt-16 py-6 border-t border-white/10 bg-gradient-to-r from-slate-900/80 to-blue-900/60 backdrop-blur-sm">
+        <div className="container mx-auto px-6">
+          <div className="text-center">
+            <p className="text-slate-300 text-sm">
+              Application développée par <span className="font-semibold text-blue-400">OrthoManager</span> entreprise basée à l'île de la Réunion
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
