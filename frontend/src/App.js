@@ -537,6 +537,157 @@ function App() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="presentation">
+            {/* Hero Section */}
+            <div className="powerbi-section mb-8 text-center">
+              <div className="powerbi-section-header">
+                <div className="flex items-center justify-center mb-6">
+                  <div className="ortho-manager-logo h-20 w-24 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 rounded-xl p-4 backdrop-blur-sm border border-white/20 shadow-xl flex items-center justify-center mr-4">
+                    <div className="text-white font-bold text-xl leading-tight text-center">
+                      <div className="text-sm font-semibold tracking-wider">ORTHO</div>
+                      <div className="text-lg font-black">MANAGER</div>
+                    </div>
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold text-white mb-2 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
+                      OrthoManager
+                    </h1>
+                    <p className="text-lg text-blue-200">La solution complète de gestion orthodontique</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="text-center mb-12">
+                <p className="text-xl text-slate-300 leading-relaxed max-w-4xl mx-auto">
+                  Transformez votre cabinet orthodontique avec une solution de gestion moderne, 
+                  intuitive et puissante conçue spécialement pour les professionnels de l'orthodontie.
+                </p>
+              </div>
+
+              {/* Fonctionnalités principales */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/10 rounded-xl p-6 border border-blue-400/20 hover:border-blue-400/40 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="bg-blue-500 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <BarChart3 className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Analytics Avancées</h3>
+                    <p className="text-slate-300">
+                      Tableaux de bord PowerBI-style avec métriques en temps réel, comparaisons N-1, 
+                      et visualisations interactives pour un pilotage optimal de votre activité.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-500/20 to-green-600/10 rounded-xl p-6 border border-green-400/20 hover:border-green-400/40 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="bg-green-500 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Target className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Suivi Performance</h3>
+                    <p className="text-slate-300">
+                      Monitoring complet des débuts de traitement, consultations, taux de transformation, 
+                      et performance financière avec alertes automatiques.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/10 rounded-xl p-6 border border-purple-400/20 hover:border-purple-400/40 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="bg-purple-500 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Zap className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">IA & Recommandations</h3>
+                    <p className="text-slate-300">
+                      Intelligence artificielle intégrée pour analyser vos performances et générer 
+                      des recommandations personnalisées d'amélioration.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-orange-500/20 to-orange-600/10 rounded-xl p-6 border border-orange-400/20 hover:border-orange-400/40 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="bg-orange-500 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Clock className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Gestion Temps Réel</h3>
+                    <p className="text-slate-300">
+                      Saisie simplifiée des données, historiques complets, et mise à jour 
+                      automatique de tous vos indicateurs de performance.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-teal-500/20 to-teal-600/10 rounded-xl p-6 border border-teal-400/20 hover:border-teal-400/40 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="bg-teal-500 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Shield className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Sécurité & Fiabilité</h3>
+                    <p className="text-slate-300">
+                      Données sécurisées, sauvegardes automatiques, et architecture cloud 
+                      hautement disponible pour une tranquillité d'esprit totale.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-rose-500/20 to-rose-600/10 rounded-xl p-6 border border-rose-400/20 hover:border-rose-400/40 transition-all duration-300">
+                  <div className="text-center">
+                    <div className="bg-rose-500 w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center">
+                      <Heart className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3">Support Réunionnais</h3>
+                    <p className="text-slate-300">
+                      Développé et supporté depuis l'île de la Réunion, avec une compréhension 
+                      unique des besoins des praticiens de l'océan Indien.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Statistiques d'impact */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12">
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-blue-400 mb-2">+300%</div>
+                  <p className="text-slate-300">Amélioration visibilité</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-green-400 mb-2">-50%</div>
+                  <p className="text-slate-300">Temps de reporting</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-purple-400 mb-2">+200%</div>
+                  <p className="text-slate-300">Efficacité gestion</p>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl font-bold text-orange-400 mb-2">100%</div>
+                  <p className="text-slate-300">Orthodontistes satisfaits</p>
+                </div>
+              </div>
+
+              {/* Call to Action */}
+              <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-8 text-center">
+                <h2 className="text-3xl font-bold text-white mb-4">
+                  Rejoignez la Révolution OrthoManager !
+                </h2>
+                <p className="text-xl text-blue-100 mb-6 max-w-2xl mx-auto">
+                  Découvrez pourquoi les orthodontistes de l'océan Indien font confiance à OrthoManager 
+                  pour optimiser leur pratique et améliorer leurs résultats.
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Button className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold">
+                    <Star className="w-5 h-5 mr-2" />
+                    Essai Gratuit 30 jours
+                  </Button>
+                  <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg font-semibold">
+                    <Globe className="w-5 h-5 mr-2" />
+                    Demander une Démo
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
           <TabsContent value="dashboard">
             {/* KPIs principaux avec TOUTES les données */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
