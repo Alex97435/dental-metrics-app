@@ -560,7 +560,7 @@ function App() {
               <div className="text-center mb-12">
                 <p className="text-xl text-slate-300 leading-relaxed max-w-4xl mx-auto">
                   Transformez votre cabinet orthodontique avec une solution de gestion moderne, 
-                  intuitive et puissante conçue spécialement pour les professionnels de l'orthodontie.
+                  intuitive et puissante conçue spécialement pour les orthodontistes en France.
                 </p>
               </div>
 
