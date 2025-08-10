@@ -671,18 +671,13 @@ function App() {
                   Rejoignez la Révolution OrthoManager !
                 </h2>
                 <p className="text-xl text-blue-100 mb-6 max-w-2xl mx-auto">
-                  Découvrez pourquoi les orthodontistes de l'océan Indien font confiance à OrthoManager 
+                  Découvrez pourquoi les orthodontistes français font confiance à OrthoManager 
                   pour optimiser leur pratique et améliorer leurs résultats.
                 </p>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Button className="bg-white text-blue-600 hover:bg-blue-50 px-8 py-3 text-lg font-semibold">
-                    <Star className="w-5 h-5 mr-2" />
-                    Essai Gratuit 30 jours
-                  </Button>
-                  <Button variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-3 text-lg font-semibold">
-                    <Globe className="w-5 h-5 mr-2" />
-                    Demander une Démo
-                  </Button>
+                <div className="text-center">
+                  <p className="text-lg text-blue-200 font-semibold">
+                    🇫🇷 Solution française • Support expert • Innovation continue
+                  </p>
                 </div>
               </div>
             </div>
