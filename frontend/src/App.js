@@ -1078,17 +1078,337 @@ function App() {
           </TabsContent>
 
           <TabsContent value="saisie">
-            <div className="text-center py-12">
-              <FileText className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-              <p className="text-slate-400 text-lg">Module de saisie en développement</p>
-              <p className="text-sm text-slate-500">Les données complètes sont déjà intégrées pour mars-mai 2025</p>
-              <Button
-                onClick={sauvegarderDonnees}
-                disabled={loading}
-                className="mt-4 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200"
-              >
-                {loading ? 'Sauvegarde...' : 'Sauvegarder données actuelles'}
-              </Button>
+            <div className="space-y-8">
+              {/* Header de la saisie */}
+              <div className="powerbi-section">
+                <div className="powerbi-section-header">
+                  <h3 className="text-2xl font-bold text-white flex items-center">
+                    <FileText className="w-8 h-8 mr-3 text-blue-400" />
+                    Saisie des Données Orthodontiques
+                  </h3>
+                  <Badge className="bg-blue-500/20 text-blue-300 border-blue-400/30">
+                    {selectedMonth} {selectedYear}
+                  </Badge>
+                </div>
+                <p className="text-slate-300 leading-relaxed">
+                  Interface moderne de saisie pour tous vos indicateurs orthodontiques. 
+                  Saisissez facilement vos données mensuelles et visualisez l'impact en temps réel.
+                </p>
+              </div>
+
+              {/* Formulaires de saisie organisés */}
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                
+                {/* Section Activité Principale */}
+                <div className="powerbi-section">
+                  <div className="powerbi-section-header">
+                    <h4 className="text-xl font-semibold text-white flex items-center">
+                      <Activity className="w-6 h-6 mr-2 text-green-400" />
+                      Activité Principale
+                    </h4>
+                  </div>
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label className="text-slate-300 mb-2 block">Débuts de traitement</Label>
+                        <Input
+                          type="number"
+                          value={currentData.metriques_activite.debuts_traitement || ''}
+                          onChange={(e) => updateNestedData('metriques_activite', 'debuts_traitement', e.target.value)}
+                          className="powerbi-input"
+                          placeholder="Ex: 45"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-slate-300 mb-2 block">Premières consultations</Label>
+                        <Input
+                          type="number"
+                          value={currentData.metriques_activite.premieres_consultations || ''}
+                          onChange={(e) => updateNestedData('metriques_activite', 'premieres_consultations', e.target.value)}
+                          className="powerbi-input"
+                          placeholder="Ex: 38"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-slate-300 mb-2 block">Déposes</Label>
+                        <Input
+                          type="number"
+                          value={currentData.metriques_activite.deposes || ''}
+                          onChange={(e) => updateNestedData('metriques_activite', 'deposes', e.target.value)}
+                          className="powerbi-input"
+                          placeholder="Ex: 22"
+                        />
+                      </div>
+                      <div>
+                        <Label className="text-slate-300 mb-2 block">Recettes du mois (€)</Label>
+                        <Input
+                          type="number"
+                          value={currentData.metriques_activite.recettes_mois || ''}
+                          onChange={(e) => updateNestedData('metriques_activite', 'recettes_mois', e.target.value)}
+                          className="powerbi-input"
+                          placeholder="Ex: 165000"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                      <h5 className="text-white font-semibold mb-3 flex items-center">
+                        <Clock className="w-5 h-5 mr-2 text-orange-400" />
+                        Gestion des RDV
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">RDV Manqués</Label>
+                          <Input
+                            type="number"
+                            value={currentData.metriques_activite.rdv_manques || ''}
+                            onChange={(e) => updateNestedData('metriques_activite', 'rdv_manques', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 130"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">RDV Présents</Label>
+                          <Input
+                            type="number"
+                            value={currentData.metriques_activite.rdv_presents || ''}
+                            onChange={(e) => updateNestedData('metriques_activite', 'rdv_presents', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 895"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section Consultations Spécialisées */}
+                <div className="powerbi-section">
+                  <div className="powerbi-section-header">
+                    <h4 className="text-xl font-semibold text-white flex items-center">
+                      <Users className="w-6 h-6 mr-2 text-purple-400" />
+                      Consultations Spécialisées
+                    </h4>
+                  </div>
+                  <div className="space-y-6">
+                    
+                    {/* CSE */}
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                      <h5 className="text-white font-semibold mb-3 text-red-400">Consultations CSE</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Nombre CSE</Label>
+                          <Input
+                            type="number"
+                            value={currentData.consultations_cse.nombre_cse || ''}
+                            onChange={(e) => updateNestedData('consultations_cse', 'nombre_cse', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 20"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">En traitement/attente</Label>
+                          <Input
+                            type="number"
+                            value={currentData.consultations_cse.en_traitement_attente_cse || ''}
+                            onChange={(e) => updateNestedData('consultations_cse', 'en_traitement_attente_cse', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 3"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Diagnostics Enfants */}
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                      <h5 className="text-white font-semibold mb-3 text-green-400">Diagnostics Enfants</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Nombre diagnostics</Label>
+                          <Input
+                            type="number"
+                            value={currentData.diagnostics_enfants.nombre_diagnostics_enfants || ''}
+                            onChange={(e) => updateNestedData('diagnostics_enfants', 'nombre_diagnostics_enfants', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 19"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">En traitement/attente</Label>
+                          <Input
+                            type="number"
+                            value={currentData.diagnostics_enfants.en_traitement_attente_enfants || ''}
+                            onChange={(e) => updateNestedData('diagnostics_enfants', 'en_traitement_attente_enfants', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 15"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* CSA */}
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                      <h5 className="text-white font-semibold mb-3 text-orange-400">Consultations CSA</h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Nombre CSA</Label>
+                          <Input
+                            type="number"
+                            value={currentData.consultations_csa.nombre_csa || ''}
+                            onChange={(e) => updateNestedData('consultations_csa', 'nombre_csa', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 17"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">En traitement/attente</Label>
+                          <Input
+                            type="number"
+                            value={currentData.consultations_csa.en_traitement_attente_csa || ''}
+                            onChange={(e) => updateNestedData('consultations_csa', 'en_traitement_attente_csa', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 0"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section Ressources & Finances */}
+                <div className="powerbi-section">
+                  <div className="powerbi-section-header">
+                    <h4 className="text-xl font-semibold text-white flex items-center">
+                      <Euro className="w-6 h-6 mr-2 text-green-400" />
+                      Ressources & Finances
+                    </h4>
+                  </div>
+                  <div className="space-y-6">
+                    
+                    {/* Ressources Humaines */}
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                      <h5 className="text-white font-semibold mb-3 flex items-center">
+                        <UserCheck className="w-5 h-5 mr-2 text-blue-400" />
+                        Ressources Humaines
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Jours Dr Vergez</Label>
+                          <Input
+                            type="number"
+                            value={currentData.ressources_humaines.jours_dr_vergez || ''}
+                            onChange={(e) => updateNestedData('ressources_humaines', 'jours_dr_vergez', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 13"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Jours Collaborateur</Label>
+                          <Input
+                            type="number"
+                            value={currentData.ressources_humaines.jours_collaborateur || ''}
+                            onChange={(e) => updateNestedData('ressources_humaines', 'jours_collaborateur', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 19"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Devis */}
+                    <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-600">
+                      <h5 className="text-white font-semibold mb-3 flex items-center">
+                        <FileText className="w-5 h-5 mr-2 text-emerald-400" />
+                        Devis Acceptés
+                      </h5>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Nombre de devis</Label>
+                          <Input
+                            type="number"
+                            value={currentData.devis.nombre_devis_acceptes || ''}
+                            onChange={(e) => updateNestedData('devis', 'nombre_devis_acceptes', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 23"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-slate-300 mb-2 block">Total devis (€)</Label>
+                          <Input
+                            type="number"
+                            value={currentData.devis.total_devis_acceptes || ''}
+                            onChange={(e) => updateNestedData('devis', 'total_devis_acceptes', e.target.value)}
+                            className="powerbi-input"
+                            placeholder="Ex: 120000"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section Aperçu & Actions */}
+                <div className="powerbi-section">
+                  <div className="powerbi-section-header">
+                    <h4 className="text-xl font-semibold text-white flex items-center">
+                      <Target className="w-6 h-6 mr-2 text-yellow-400" />
+                      Aperçu & Actions
+                    </h4>
+                  </div>
+                  <div className="space-y-6">
+                    
+                    {/* Aperçu rapide */}
+                    <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-lg p-6 border border-blue-400/30">
+                      <h5 className="text-white font-semibold mb-4">Aperçu Période Actuelle</h5>
+                      <div className="grid grid-cols-2 gap-4 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Recettes:</span>
+                          <span className="text-blue-400 font-semibold">{currentData.metriques_activite.recettes_mois?.toLocaleString('fr-FR') || '0'}€</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Débuts:</span>
+                          <span className="text-green-400 font-semibold">{currentData.metriques_activite.debuts_traitement || '0'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">Consultations:</span>
+                          <span className="text-purple-400 font-semibold">{currentData.metriques_activite.premieres_consultations || '0'}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-300">RDV Manqués:</span>
+                          <span className="text-orange-400 font-semibold">{currentData.metriques_activite.rdv_manques || '0'}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions de sauvegarde */}
+                    <div className="space-y-4">
+                      <Button
+                        onClick={sauvegarderDonnees}
+                        disabled={loading}
+                        className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-lg transition-all duration-200 text-lg"
+                      >
+                        {loading ? (
+                          <div className="flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                            Sauvegarde en cours...
+                          </div>
+                        ) : (
+                          <div className="flex items-center justify-center">
+                            <Save className="w-5 h-5 mr-2" />
+                            Sauvegarder & Analyser
+                          </div>
+                        )}
+                      </Button>
+
+                      <div className="text-center">
+                        <p className="text-slate-400 text-sm">
+                          Les données seront automatiquement analysées et les recommandations mises à jour
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </TabsContent>
 
