@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './components/ui/tabs';
 import { Badge } from './components/ui/badge';
 import { Alert, AlertDescription } from './components/ui/alert';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
-import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X, ChevronLeft, ChevronRight, Calculator } from 'lucide-react';
+import { Calendar, TrendingUp, TrendingDown, Users, Euro, FileText, AlertTriangle, CheckCircle, Info, Activity, Clock, Target, UserCheck, BarChart3, PieChart, LineChart, Zap, Edit, Save, X, ChevronLeft, ChevronRight, Calculator, Presentation, Star, Trophy, Shield, Sparkles, Heart, Award, TrendingUpIcon, Globe } from 'lucide-react';
 
 function App() {
   // Données historiques COMPLÈTES avec TOUS les indicateurs
