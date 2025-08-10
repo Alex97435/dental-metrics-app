@@ -412,17 +412,23 @@ function App() {
           <div className="flex items-center justify-between text-white">
             <div className="flex items-center space-x-6">
               <div className="flex-shrink-0">
-                <img
-                  src="https://customer-assets.emergentagent.com/job_vergez-tracker/artifacts/321ccg02_Logo%20Cabinet%20FV.png"
-                  alt="Logo Cabinet Dr Vergez"
-                  className="h-16 w-16 object-contain bg-white/10 rounded-lg p-2 backdrop-blur-sm border border-white/20"
-                />
+                <div className="ortho-manager-logo h-16 w-20 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 rounded-xl p-3 backdrop-blur-sm border border-white/20 shadow-xl flex items-center justify-center">
+                  <div className="text-white font-bold text-lg leading-tight text-center">
+                    <div className="text-xs font-semibold tracking-wider">ORTHO</div>
+                    <div className="text-sm font-black">MANAGER</div>
+                  </div>
+                </div>
               </div>
               <div>
                 <h1 className="text-5xl font-bold mb-3 bg-gradient-to-r from-white via-blue-100 to-indigo-200 bg-clip-text text-transparent">
                   SELARL Dr VERGEZ
                 </h1>
                 <p className="text-blue-100 text-lg">Tableau de bord orthodontique • Analytics & Performance</p>
+                <div className="flex items-center mt-2">
+                  <div className="text-xs text-blue-200/80 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 border border-white/20">
+                    Powered by OrthoManager
+                  </div>
+                </div>
                 <div className="flex items-center mt-4 space-x-6">
                   <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
                     <Calculator className="w-5 h-5 mr-2" />
