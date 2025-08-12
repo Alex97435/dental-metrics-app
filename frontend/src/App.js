@@ -1281,8 +1281,8 @@ function App() {
                     <h5 className="text-orange-400 font-semibold">Attention</h5>
                   </div>
                   <p className="text-slate-300 text-sm">
-                    Taux CSE faible (15% en mai). Analyser les freins 
-                    et optimiser le processus de conversion.
+                    Amélioration CSE notable: de 15% (mai) à 26% (juillet). 
+                    Tendance positive à consolider en septembre.
                   </p>
                 </div>
 
