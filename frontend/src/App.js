@@ -1123,38 +1123,38 @@ function App() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-400 mb-2">
-                    {donneesHistoriquesCompletes[2].metriques_activite.debuts_traitement}
+                    {donneesHistoriquesCompletes[4].metriques_activite.debuts_traitement}
                   </div>
-                  <p className="text-slate-300 text-sm">Débuts Mai</p>
-                  <div className="text-xs text-green-400 mt-1">
-                    +{donneesHistoriquesCompletes[2].comparaisons.debuts_traitement_evolution}% vs N-1
+                  <p className="text-slate-300 text-sm">Débuts Juillet</p>
+                  <div className="text-xs text-red-400 mt-1">
+                    {donneesHistoriquesCompletes[4].comparaisons.debuts_traitement_evolution}% vs N-1
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-400 mb-2">
-                    {donneesHistoriquesCompletes[2].metriques_activite.premieres_consultations}
+                    {donneesHistoriquesCompletes[4].metriques_activite.premieres_consultations}
                   </div>
                   <p className="text-slate-300 text-sm">Consultations</p>
                   <div className="text-xs text-red-400 mt-1">
-                    {donneesHistoriquesCompletes[2].comparaisons.premieres_consultations_evolution}% vs N-1
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-green-400 mb-2">
-                    {Math.round(donneesHistoriquesCompletes[2].metriques_activite.recettes_mois / 1000)}K€
-                  </div>
-                  <p className="text-slate-300 text-sm">Recettes Mai</p>
-                  <div className="text-xs text-green-400 mt-1">
-                    +{donneesHistoriquesCompletes[2].comparaisons.recettes_evolution}% vs N-1
+                    {donneesHistoriquesCompletes[4].comparaisons.premieres_consultations_evolution}% vs N-1
                   </div>
                 </div>
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-400 mb-2">
-                    {donneesHistoriquesCompletes[2].diagnostics_enfants.taux_transformation_enfants}%
+                    {Math.round(donneesHistoriquesCompletes[4].metriques_activite.recettes_mois / 1000)}K€
+                  </div>
+                  <p className="text-slate-300 text-sm">Recettes Juillet</p>
+                  <div className="text-xs text-red-400 mt-1">
+                    {donneesHistoriquesCompletes[4].comparaisons.recettes_evolution}% vs N-1
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-400 mb-2">
+                    {donneesHistoriquesCompletes[4].diagnostics_enfants.taux_transformation_enfants}%
                   </div>
                   <p className="text-slate-300 text-sm">Taux Enfants</p>
-                  <div className="text-xs text-green-400 mt-1">
-                    +{donneesHistoriquesCompletes[2].comparaisons.diagnostics_traitement_evolution}% vs N-1
+                  <div className="text-xs text-red-400 mt-1">
+                    {donneesHistoriquesCompletes[4].comparaisons.diagnostics_traitement_evolution}% vs N-1
                   </div>
                 </div>
               </div>
