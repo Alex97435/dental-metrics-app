@@ -204,6 +204,134 @@ function App() {
         devis_total_evolution: -26.0,
         devis_nombre_evolution: -26.0
       }
+    },
+    {
+      mois: 'juin',
+      annee: 2025,
+      metriques_activite: {
+        debuts_traitement: 30,
+        cumul_debuts_traitement: 309,
+        premieres_consultations: 54,
+        cumul_premieres_consultations: 425,
+        deposes: 32,
+        cumul_deposes: 211,
+        recettes_mois: 167000,
+        cumul_recettes: 1468000,
+        rdv_manques: 168,
+        rdv_presents: 851,
+        taux_rdv_manques: 20.0
+      },
+      ressources_humaines: {
+        jours_collaborateur: 18,
+        jours_dr_vergez: 11
+      },
+      consultations_cse: {
+        nombre_cse: 30,
+        cumul_cse: 224,
+        en_traitement_attente_cse: 6,
+        cumul_traitement_cse: 41,
+        taux_transformation_cse: 20.0
+      },
+      diagnostics_enfants: {
+        nombre_diagnostics_enfants: 23,
+        cumul_diag_enfants: 191,
+        en_traitement_attente_enfants: 14,
+        cumul_traitement_diag: 140,
+        taux_transformation_enfants: 61.0
+      },
+      consultations_csa: {
+        nombre_csa: 24,
+        cumul_csa: 199,
+        en_traitement_attente_csa: 1,
+        cumul_traitement_csa: 5,
+        taux_transformation_csa: 4.0
+      },
+      devis: {
+        total_devis_acceptes: 103000,
+        nombre_devis_acceptes: 19
+      },
+      comparaisons: {
+        debuts_traitement_evolution: -3.0,
+        premieres_consultations_evolution: 93.0,
+        deposes_evolution: 0.0,
+        recettes_evolution: 5.0,
+        rdv_manques_evolution: 35.0,
+        rdv_presents_evolution: 15.0,
+        jours_collaborateur_evolution: 0.0,
+        jours_vergez_evolution: 10.0,
+        cse_evolution: 88.0,
+        cse_traitement_evolution: 20.0,
+        diagnostics_enfants_evolution: 53.0,
+        diagnostics_traitement_evolution: 27.0,
+        csa_evolution: 100.0,
+        csa_traitement_evolution: 0.0,
+        devis_total_evolution: -17.0,
+        devis_nombre_evolution: -16.0
+      }
+    },
+    {
+      mois: 'juillet',
+      annee: 2025,
+      metriques_activite: {
+        debuts_traitement: 20,
+        cumul_debuts_traitement: 329,
+        premieres_consultations: 35,
+        cumul_premieres_consultations: 460,
+        deposes: 15,
+        cumul_deposes: 226,
+        recettes_mois: 126000,
+        cumul_recettes: 1594000,
+        rdv_manques: 129,
+        rdv_presents: 674,
+        taux_rdv_manques: 19.0
+      },
+      ressources_humaines: {
+        jours_collaborateur: 12,
+        jours_dr_vergez: 9
+      },
+      consultations_cse: {
+        nombre_cse: 19,
+        cumul_cse: 243,
+        en_traitement_attente_cse: 5,
+        cumul_traitement_cse: 46,
+        taux_transformation_cse: 26.0
+      },
+      diagnostics_enfants: {
+        nombre_diagnostics_enfants: 16,
+        cumul_diag_enfants: 207,
+        en_traitement_attente_enfants: 10,
+        cumul_traitement_diag: 150,
+        taux_transformation_enfants: 63.0
+      },
+      consultations_csa: {
+        nombre_csa: 16,
+        cumul_csa: 215,
+        en_traitement_attente_csa: 0,
+        cumul_traitement_csa: 5,
+        taux_transformation_csa: 0.0
+      },
+      devis: {
+        total_devis_acceptes: 62000,
+        nombre_devis_acceptes: 12
+      },
+      comparaisons: {
+        debuts_traitement_evolution: -29.0,
+        premieres_consultations_evolution: -8.0,
+        deposes_evolution: -42.0,
+        recettes_evolution: -20.0,
+        rdv_manques_evolution: -10.0,
+        rdv_presents_evolution: -9.0,
+        jours_collaborateur_evolution: -20.0,
+        jours_vergez_evolution: -25.0,
+        cse_evolution: -17.0,
+        cse_traitement_evolution: -44.0,
+        diagnostics_enfants_evolution: -16.0,
+        diagnostics_traitement_evolution: -38.0,
+        csa_evolution: 7.0,
+        csa_traitement_evolution: -100.0,
+        devis_total_evolution: -58.0,
+        devis_nombre_evolution: -62.0
+      }
     }
   ];
 
