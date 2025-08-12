@@ -1302,7 +1302,7 @@ function App() {
             {/* Tableau détaillé COMPLET */}
             <div className="powerbi-section">
               <div className="powerbi-section-header">
-                <h3 className="text-xl font-bold text-white">Tableau Complet Mars-Mai 2025</h3>
+                <h3 className="text-xl font-bold text-white">Tableau Complet Mars-Juillet 2025</h3>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -1312,6 +1312,8 @@ function App() {
                       <th className="text-left py-3 px-2 font-semibold text-slate-300">Mars</th>
                       <th className="text-left py-3 px-2 font-semibold text-slate-300">Avril</th>
                       <th className="text-left py-3 px-2 font-semibold text-slate-300">Mai</th>
+                      <th className="text-left py-3 px-2 font-semibold text-slate-300">Juin</th>
+                      <th className="text-left py-3 px-2 font-semibold text-slate-300">Juillet</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1320,42 +1322,56 @@ function App() {
                       <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.debuts_traitement}</td>
                       <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.debuts_traitement}</td>
                       <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.debuts_traitement}</td>
+                      <td className="py-2 px-2 text-yellow-400 font-bold">{donneesHistoriquesCompletes[3].metriques_activite.debuts_traitement}</td>
+                      <td className="py-2 px-2 text-red-400 font-bold">{donneesHistoriquesCompletes[4].metriques_activite.debuts_traitement}</td>
                     </tr>
                     <tr className="border-b border-slate-700">
                       <td className="py-2 px-2 text-slate-300">Cumul débuts</td>
                       <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.cumul_debuts_traitement}</td>
                       <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.cumul_debuts_traitement}</td>
                       <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.cumul_debuts_traitement}</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[3].metriques_activite.cumul_debuts_traitement}</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[4].metriques_activite.cumul_debuts_traitement}</td>
                     </tr>
                     <tr className="border-b border-slate-700">
                       <td className="py-2 px-2 text-slate-300">Consultations</td>
                       <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.premieres_consultations}</td>
                       <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.premieres_consultations}</td>
                       <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.premieres_consultations}</td>
+                      <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[3].metriques_activite.premieres_consultations}</td>
+                      <td className="py-2 px-2 text-purple-400 font-bold">{donneesHistoriquesCompletes[4].metriques_activite.premieres_consultations}</td>
                     </tr>
                     <tr className="border-b border-slate-700">
                       <td className="py-2 px-2 text-slate-300">Recettes (K€)</td>
                       <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.recettes_mois / 1000}K</td>
                       <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.recettes_mois / 1000}K</td>
                       <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.recettes_mois / 1000}K</td>
+                      <td className="py-2 px-2 text-blue-400 font-bold">{donneesHistoriquesCompletes[3].metriques_activite.recettes_mois / 1000}K</td>
+                      <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[4].metriques_activite.recettes_mois / 1000}K</td>
                     </tr>
                     <tr className="border-b border-slate-700">
                       <td className="py-2 px-2 text-slate-300">Cumul recettes (K€)</td>
                       <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[0].metriques_activite.cumul_recettes / 1000}K</td>
                       <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[1].metriques_activite.cumul_recettes / 1000}K</td>
                       <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[2].metriques_activite.cumul_recettes / 1000}K</td>
+                      <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[3].metriques_activite.cumul_recettes / 1000}K</td>
+                      <td className="py-2 px-2 text-emerald-400 font-bold">{donneesHistoriquesCompletes[4].metriques_activite.cumul_recettes / 1000}K</td>
                     </tr>
                     <tr className="border-b border-slate-700">
                       <td className="py-2 px-2 text-slate-300">Taux transf. enfants (%)</td>
                       <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[0].diagnostics_enfants.taux_transformation_enfants}%</td>
                       <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[1].diagnostics_enfants.taux_transformation_enfants}%</td>
                       <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[2].diagnostics_enfants.taux_transformation_enfants}%</td>
+                      <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[3].diagnostics_enfants.taux_transformation_enfants}%</td>
+                      <td className="py-2 px-2 text-orange-400 font-bold">{donneesHistoriquesCompletes[4].diagnostics_enfants.taux_transformation_enfants}%</td>
                     </tr>
                     <tr className="border-b border-slate-700">
                       <td className="py-2 px-2 text-slate-300">Taux transf. CSE (%)</td>
                       <td className="py-2 px-2 text-red-400 font-bold">{donneesHistoriquesCompletes[0].consultations_cse.taux_transformation_cse}%</td>
                       <td className="py-2 px-2 text-red-400 font-bold">{donneesHistoriquesCompletes[1].consultations_cse.taux_transformation_cse}%</td>
                       <td className="py-2 px-2 text-yellow-400 font-bold">{donneesHistoriquesCompletes[2].consultations_cse.taux_transformation_cse}%</td>
+                      <td className="py-2 px-2 text-yellow-400 font-bold">{donneesHistoriquesCompletes[3].consultations_cse.taux_transformation_cse}%</td>
+                      <td className="py-2 px-2 text-green-400 font-bold">{donneesHistoriquesCompletes[4].consultations_cse.taux_transformation_cse}%</td>
                     </tr>
                   </tbody>
                 </table>
