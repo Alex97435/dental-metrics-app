@@ -1270,8 +1270,8 @@ function App() {
                     <h5 className="text-green-400 font-semibold">Point Fort</h5>
                   </div>
                   <p className="text-slate-300 text-sm">
-                    Taux de transformation pédodontie excellent (79%). 
-                    Cette expertise est un avantage concurrentiel majeur.
+                    Performance de juillet: 63% (baisse vs 79% en mai). 
+                    Maintenir la qualité malgré la période estivale.
                   </p>
                 </div>
                 
