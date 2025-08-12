@@ -1292,8 +1292,8 @@ function App() {
                     <h5 className="text-blue-400 font-semibold">Opportunité</h5>
                   </div>
                   <p className="text-slate-300 text-sm">
-                    Débuts en forte croissance (+37%). Anticiper les besoins 
-                    en capacité pour maintenir la qualité.
+                    Période estivale: baisse naturelle des débuts (-29% juillet). 
+                    Préparer la reprise de septembre avec actions ciblées.
                   </p>
                 </div>
               </div>
