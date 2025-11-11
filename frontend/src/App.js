@@ -463,9 +463,9 @@ function App() {
     }
   ];
 
-  const [selectedMonth, setSelectedMonth] = useState('juillet');
+  const [selectedMonth, setSelectedMonth] = useState('octobre');
   const [selectedYear, setSelectedYear] = useState(2025);
-  const [currentData, setCurrentData] = useState(donneesHistoriquesCompletes[4]); // Juillet par défaut
+  const [currentData, setCurrentData] = useState(donneesHistoriquesCompletes[6]); // Octobre par défaut
 
   const [tableaux, setTableaux] = useState([]);
   const [recommandations, setRecommandations] = useState([]);
