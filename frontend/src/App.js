@@ -1398,8 +1398,8 @@ function App() {
                     <h5 className="text-green-400 font-semibold">Point Fort</h5>
                   </div>
                   <p className="text-slate-300 text-sm">
-                    Performance de juillet: 63% (baisse vs 79% en mai). 
-                    Maintenir la qualité malgré la période estivale.
+                    Performance exceptionnelle octobre: 89% (vs 63% juillet). 
+                    Reprise post-estivale très réussie, expertise pédodontie confirmée.
                   </p>
                 </div>
                 
