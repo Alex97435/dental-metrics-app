@@ -1420,8 +1420,8 @@ function App() {
                     <h5 className="text-blue-400 font-semibold">Opportunité</h5>
                   </div>
                   <p className="text-slate-300 text-sm">
-                    Période estivale: baisse naturelle des débuts (-29% juillet). 
-                    Préparer la reprise de septembre avec actions ciblées.
+                    Reprise remarquable octobre: 64 débuts (+146% vs N-1). 
+                    Excellent rebond post-été, capitaliser sur cette dynamique.
                   </p>
                 </div>
               </div>
