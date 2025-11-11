@@ -1234,7 +1234,7 @@ function App() {
                   Analytics & Visualisations Avancées
                 </h3>
                 <Badge className="bg-gradient-to-r from-blue-500 to-purple-500 text-white border-0">
-                  Mars - Juillet 2025
+                  Mars - Octobre 2025
                 </Badge>
               </div>
               <p className="text-lg text-slate-300 leading-relaxed">
