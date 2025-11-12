@@ -1,0 +1,39 @@
+# Configuration Railpack pour OrthoManager
+version: 1
+
+# Détection automatique
+language: shell
+
+# Script de démarrage
+start: ./start.sh
+
+# Variables d'environnement
+env:
+  NODE_ENV: production
+  PYTHONPATH: /app/backend
+
+# Ports exposés
+ports:
+  - 3000  # Frontend React
+  - 8001  # Backend FastAPI
+
+# Healthcheck
+healthcheck:
+  path: /api/health
+  port: 8001
+  interval: 30s
+  timeout: 5s
+  retries: 3
+
+# Build hooks
+build:
+  commands:
+    - echo "🔧 Configuration du build OrthoManager"
+    - chmod +x start.sh
+
+# Fichiers à exclure
+ignore:
+  - "*.md"
+  - ".git*"
+  - "tests/"
+  - "*.log"
