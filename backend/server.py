@@ -7,7 +7,25 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import datetime, date
 import uuid
 
-app = FastAPI()
+app = FastAPI(title="OrthoManager API", version="1.0.0")
+
+# Health check endpoint
+@app.get("/api/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "service": "OrthoManager Backend",
+        "version": "1.0.0",
+        "timestamp": datetime.now().isoformat()
+    }
+
+@app.get("/")
+async def root():
+    return {
+        "message": "OrthoManager API",
+        "status": "running",
+        "docs": "/docs"
+    }
 
 # CORS middleware
 app.add_middleware(
