@@ -29,13 +29,7 @@ async def health_check():
         "timestamp": datetime.now().isoformat()
     }
 
-@app.get("/")
-async def root():
-    return {
-        "message": "OrthoManager API",
-        "status": "running",
-        "docs": "/docs"
-    }
+# Root endpoint handled by serve_frontend above
 
 # CORS middleware
 app.add_middleware(
