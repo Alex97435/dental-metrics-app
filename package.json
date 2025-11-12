@@ -1,0 +1,35 @@
+{
+  "name": "orthomanager",
+  "version": "1.0.0",
+  "description": "Application de gestion orthodontique complète",
+  "main": "start.sh",
+  "scripts": {
+    "start": "./start.sh",
+    "install": "cd backend && pip install -r requirements.txt && cd ../frontend && yarn install",
+    "build": "cd frontend && yarn build",
+    "dev": "concurrently \"cd backend && uvicorn server:app --reload --port 8001\" \"cd frontend && yarn start\"",
+    "test": "cd backend && pytest && cd ../frontend && yarn test"
+  },
+  "keywords": [
+    "orthodontie",
+    "gestion",
+    "cabinet",
+    "dentaire",
+    "dashboard",
+    "fastapi",
+    "react"
+  ],
+  "author": "OrthoManager",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/orthomanager/dashboard"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
