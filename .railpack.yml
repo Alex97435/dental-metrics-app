@@ -2,34 +2,38 @@
 version: 1
 
 # Détection automatique
-language: shell
+language: python
 
-# Script de démarrage
-start: ./start.sh
+# Script de démarrage alternatif
+start: cd backend && gunicorn server:app --bind 0.0.0.0:$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker
 
 # Variables d'environnement
 env:
   NODE_ENV: production
   PYTHONPATH: /app/backend
+  GUNICORN_CMD_ARGS: "--timeout 120 --keep-alive 2"
 
-# Ports exposés
-ports:
-  - 3000  # Frontend React
-  - 8001  # Backend FastAPI
+# Port principal (Railway utilise $PORT automatiquement)
+port: $PORT
 
 # Healthcheck
 healthcheck:
   path: /api/health
-  port: 8001
   interval: 30s
-  timeout: 5s
+  timeout: 10s
   retries: 3
 
 # Build hooks
 build:
   commands:
     - echo "🔧 Configuration du build OrthoManager"
-    - chmod +x start.sh
+    - chmod +x start.sh railway.sh
+    - cd frontend && yarn install && yarn build
+    - cd backend && pip install -r requirements.txt
+
+# Runtime
+runtime:
+  python: "3.11"
 
 # Fichiers à exclure
 ignore:
@@ -37,3 +41,4 @@ ignore:
   - ".git*"
   - "tests/"
   - "*.log"
+  - "node_modules/"
