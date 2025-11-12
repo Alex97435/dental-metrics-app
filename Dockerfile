@@ -30,8 +30,8 @@ COPY . .
 # Construire le frontend
 RUN cd frontend && yarn build
 
-# Rendre le script executable
-RUN chmod +x start.sh
+# Rendre les scripts executables
+RUN chmod +x start.sh start-prod.sh railway.sh
 
 # Créer un utilisateur non-root pour la sécurité
 RUN useradd -m -u 1000 orthomanager && chown -R orthomanager:orthomanager /app
