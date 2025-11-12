@@ -22,7 +22,7 @@ COPY frontend/package.json ./frontend/
 RUN cd backend && pip install --no-cache-dir -r requirements.txt
 
 # Installer les dépendances Node.js
-RUN cd frontend && yarn install --frozen-lockfile
+RUN cd frontend && yarn install
 
 # Copier le reste des fichiers
 COPY . .
