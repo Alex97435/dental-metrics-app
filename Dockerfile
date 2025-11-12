@@ -1,26 +1,32 @@
-# Dockerfile simplifié pour OrthoManager
+# Dockerfile simplifié pour OrthoManager - Version NPM
 FROM python:3.11-slim
 
-# Installation de Node.js et outils nécessaires
+# Installation de Node.js
 RUN apt-get update && apt-get install -y \
     curl \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g yarn \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Répertoire de travail
 WORKDIR /app
 
-# Copier tous les fichiers
-COPY . .
+# Copier les fichiers package.json en premier pour le cache
+COPY frontend/package.json frontend/
+COPY backend/requirements.txt backend/
+
+# Installation des dépendances frontend avec npm (plus stable que yarn)
+RUN cd frontend && npm install --legacy-peer-deps
 
 # Installation des dépendances backend
-RUN cd backend && pip install -r requirements.txt
+RUN cd backend && pip install --no-cache-dir -r requirements.txt
 
-# Installation des dépendances frontend et build
-RUN cd frontend && yarn install && yarn build
+# Copier le reste des fichiers
+COPY . .
+
+# Build du frontend
+RUN cd frontend && npm run build
 
 # Rendre les scripts executables
 RUN chmod +x start.sh start-prod.sh railway.sh
