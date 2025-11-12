@@ -1,5 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Dict, List, Optional
 import os
@@ -8,6 +10,14 @@ from datetime import datetime, date
 import uuid
 
 app = FastAPI(title="OrthoManager API", version="1.0.0")
+
+# Servir les fichiers statiques du frontend
+if os.path.exists("/app/frontend/build"):
+    app.mount("/static", StaticFiles(directory="/app/frontend/build/static"), name="static")
+    
+    @app.get("/")
+    async def serve_frontend():
+        return FileResponse("/app/frontend/build/index.html")
 
 # Health check endpoint
 @app.get("/api/health")
