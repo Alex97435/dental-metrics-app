@@ -1,10 +1,9 @@
-# Dockerfile pour OrthoManager
+# Dockerfile simplifié pour OrthoManager
 FROM python:3.11-slim
 
-# Installation des dépendances système
+# Installation de Node.js et outils nécessaires
 RUN apt-get update && apt-get install -y \
     curl \
-    build-essential \
     && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g yarn \
@@ -14,31 +13,20 @@ RUN apt-get update && apt-get install -y \
 # Répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers requirements en premier (pour le cache Docker)
-COPY backend/requirements.txt ./backend/
-COPY frontend/package.json ./frontend/
-
-# Installer les dépendances Python
-RUN cd backend && pip install --no-cache-dir -r requirements.txt
-
-# Installer les dépendances Node.js
-RUN cd frontend && yarn install
-
-# Copier le reste des fichiers
+# Copier tous les fichiers
 COPY . .
 
-# Construire le frontend
-RUN cd frontend && yarn build
+# Installation des dépendances backend
+RUN cd backend && pip install -r requirements.txt
+
+# Installation des dépendances frontend et build
+RUN cd frontend && yarn install && yarn build
 
 # Rendre les scripts executables
 RUN chmod +x start.sh start-prod.sh railway.sh
 
-# Créer un utilisateur non-root pour la sécurité
-RUN useradd -m -u 1000 orthomanager && chown -R orthomanager:orthomanager /app
-USER orthomanager
-
-# Exposer les ports
-EXPOSE 3000 8001
+# Exposer le port
+EXPOSE $PORT
 
 # Variables d'environnement
 ENV PYTHONPATH=/app/backend
