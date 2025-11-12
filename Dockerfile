@@ -45,4 +45,4 @@ ENV PYTHONPATH=/app/backend
 ENV NODE_ENV=production
 
 # Commande de démarrage
-CMD ["./start.sh"]
+CMD ["./start-prod.sh"]
