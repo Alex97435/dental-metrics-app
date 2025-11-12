@@ -12,12 +12,26 @@ import uuid
 app = FastAPI(title="OrthoManager API", version="1.0.0")
 
 # Servir les fichiers statiques du frontend
-if os.path.exists("/app/frontend/build"):
-    app.mount("/static", StaticFiles(directory="/app/frontend/build/static"), name="static")
+frontend_build_path = "/app/frontend/build"
+frontend_static_path = "/app/frontend/build/static"
+frontend_index_path = "/app/frontend/build/index.html"
+
+if os.path.exists(frontend_build_path) and os.path.exists(frontend_static_path):
+    app.mount("/static", StaticFiles(directory=frontend_static_path), name="static")
     
+if os.path.exists(frontend_index_path):
     @app.get("/")
     async def serve_frontend():
-        return FileResponse("/app/frontend/build/index.html")
+        return FileResponse(frontend_index_path)
+else:
+    @app.get("/")
+    async def root():
+        return {
+            "message": "OrthoManager API",
+            "status": "running",
+            "docs": "/docs",
+            "frontend": "HTML build will be available after deployment"
+        }
 
 # Health check endpoint
 @app.get("/api/health")
